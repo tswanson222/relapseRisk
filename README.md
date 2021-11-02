@@ -14,8 +14,8 @@ UNDER CONSTRUCTION.
 The following documents demonstrate analyses involved in the
 construction and evaluation of the machine learning algorithm used to
 predict recovery outcomes in patients diagnosed with anorexia nervosa.
-To view these files, the user must download the raw files and then open
-them in a local web browser.
+To view these `.html` files, the user must download the raw files and
+then open them in a local web browser.
 
 [EPSI\_thetaAnalysis](./EPSI_thetaAnalysis.html) contains an overview of
 the initial analysis that led to the construction of this package. This
