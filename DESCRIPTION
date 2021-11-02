@@ -1,14 +1,16 @@
 Package: relapseRisk
-Title: What the Package Does (One Line, Title Case)
+Title: Predict Risk of Relapse for Anorexia Nervosa Recovery
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Trevor",
+           family = "Swanson",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "trevorswanson222@gmail.com")
+Maintainer: Trevor Swanson <trevorswanson222@gmail.com>
+Description: Predicts risk of relapse for anorexia nervosa recovery.
 License: GPL (>= 3)
+URL: https://github.com/tswanson222/relapseRisk
+BugReports: https://github.com/tswanson222/relapseRisk/issues
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

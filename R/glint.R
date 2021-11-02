@@ -106,9 +106,9 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
   }
   if(method == 'cv'){
     fitCV <- dots(
-      glinternet.cv(x, y, type, interactionCandidates = m,
-                    family = family, nFolds = nfolds, lambda = lambda,
-                    nLambda = nlam, ...), ff = fitCV
+      glinternet::glinternet.cv(x, y, type, interactionCandidates = m,
+                                family = family, nFolds = nfolds, lambda = lambda,
+                                nLambda = nlam, ...), ff = fitCV
     )
     attr(fitCV, 'm') <- m
     which.lam0 <- which(fitCV$lambda == fitCV$lambdaHat)
@@ -117,9 +117,8 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
     }
     fitCV$lambdaHat <- fitCV$lambda[which.lam0]
     fit0 <- dots(
-      glinternet(x, y, type, lambda = fitCV$lambdaHat,
-                 interactionCandidates = m,
-                 family = family, ...)
+      glinternet::glinternet(x, y, type, lambda = fitCV$lambdaHat,
+                             interactionCandidates = m, family = family, ...)
     )
     attr(fit0, 'm') <- m
     if(useSE == TRUE){
@@ -142,14 +141,13 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
     }
     fitCV$lambdaHat1Std <- fitCV$lambda[which.lam1se]
     fit0 <- dots(
-      glinternet(x, y, type, lambda = fitCV$lambdaHat,
-                 interactionCandidates = m,
-                 family = family, ...)
+      glinternet::glinternet(x, y, type, lambda = fitCV$lambdaHat,
+                             interactionCandidates = m, family = family, ...)
     )
     fit1se <- dots(
-      glinternet(x, y, type, lambda = fitCV$lambdaHat1Std,
-                 interactionCandidates = m,
-                 family = family, ...)
+      glinternet::glinternet(x, y, type, lambda = fitCV$lambdaHat1Std,
+                             interactionCandidates = m,
+                             family = family, ...)
     )
     attr(fit0, 'm') <- m
     attr(fit1se, 'm') <- m
@@ -207,7 +205,7 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
     mod1secoefs1 <- c(fit1se$betahat[2][[1]][1], mod1secoefs1)
     mod0 <- unlist(c(mod0coefs1, mod0coefs2))
     mod1se <- unlist(c(mod1secoefs1, mod1secoefs2))
-    coefs <- Matrix(cbind(mod0, mod1se), sparse = TRUE)
+    coefs <- Matrix::Matrix(cbind(mod0, mod1se), sparse = TRUE)
     allNames <- c(colnames(x), apply(combn(colnames(x), 2), 2, paste, collapse = ":"))
     rownames(coefs) <- c('(Intercept)', allNames)
     output <- list(mod0 = allNames[mod0 != 0], mod1se = allNames[mod1se != 0], coefs = coefs,
@@ -217,8 +215,8 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
   } else {
     criterion <- toupper(method)
     fit <- dots(
-      glinternet(x, y, type, interactionCandidates = m, family = family,
-                 nLambda = nlam, lambda = lambda, ...), ff = fit
+      glinternet::glinternet(x, y, type, interactionCandidates = m, family = family,
+                             nLambda = nlam, lambda = lambda, ...), ff = fit
     )
     attr(fit, 'm') <- m
     coefs <- coef(fit)[-1]
@@ -286,7 +284,7 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
         criterion == "EBIC", list(2 * gamma * n_neighbors * log(p)), list(0))[[1]]
     betas <- allCoefs[[which.min(ic_lambda)]]
     lambda_min <- fit$lambda[which.min(ic_lambda) + 1]
-    coefs <- Matrix(betas, sparse = TRUE)
+    coefs <- Matrix::Matrix(betas, sparse = TRUE)
     rownames(coefs) <- names(betas)
     fitobj <- list(fit = fit, fit0 = NA, crit = ic_lambda)
     if(length(fit$lambda) > 2){
@@ -385,7 +383,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
   # separate into categorical and continuous parts
   if (pCont > 0) {
     continuousCandidates = NULL
-    Z = as.matrix(apply(as.matrix(X[, contIndices]), 2, glinternet:::standardize))
+    Z = as.matrix(apply(as.matrix(X[, contIndices]), 2, standard))
     if (!is.null(interactionCandidates)) {
       continuousCandidates = which(contIndices %in% interactionCandidates)
     }
@@ -413,7 +411,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
   # lambda grid if not user provided
   if (is.null(lambda)) {
     nLambda <- nLambda + ifelse(!is.logical(trim), length(trim), ifelse(trim, 2, 0))
-    lambda = glinternet:::get_lambda_grid(candidates, nLambda, lambdaMinRatio)
+    lambda = getLambdaGrid(candidates, nLambda, lambdaMinRatio)
     if(lamOnly){
       if(isTRUE(trim)){trim <- c(1, length(lambda))}
       if(!identical(trim, FALSE)){lambda <- lambda[-trim]}
@@ -424,7 +422,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
     if (any(diff(lambda) > 0)) {
       stop("Error: input lambda sequence is not monotone decreasing.")
     }
-    lambdaMax = max(get_lambda_grid(candidates, nLambda, lambdaMinRatio))
+    lambdaMax = max(getLambdaGrid(candidates, nLambda, lambdaMinRatio))
     nLambda = length(lambda)
     if (nLambda == 1) {
       lambda = sort(c(lambda, lambdaMax), decreasing=TRUE)
@@ -488,125 +486,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
   return (output)
 }
 
-
-##### ROCcurve:
-ROCcurve <- function(y, X = NULL, model = NULL, plot = FALSE, optPoint = TRUE,
-                     grid = FALSE, grid_lty = 3, grid_lwd = 1.5, grid_col = "lightgray",
-                     midline = TRUE, midline_lty = 2, midline_lwd = 2, midline_col = "red",
-                     pt_pch = 23, pt_border = "black", pt_col = "green", thresh = TRUE,
-                     roc_lty = 1, roc_lwd = 2, roc_col = "black", prc = FALSE){
-  if(!is.null(model)){if(missing(y)){y <- unname(model$y)}}
-  stopifnot(dim(table(y)) == 2)
-  if(is.factor(y) | is.character(y)){
-    y <- factor(y)
-    levels(y) <- 0:1
-    y <- as.numeric(as.character(y))
-  }
-  stopifnot(all(names(table(y)) %in% c("0", "1")))
-  if(is.null(model)){
-    stopifnot(!is.null(X))
-    X <- as.data.frame(X)
-    model <- glm(y ~ ., data = X, family = binomial)
-    predProbs <- predict(model, type = "response")
-  } else if(is(model, 'train')){
-    predProbs <- predict(model, X, 'prob')[, 2]
-    #lam <- model$finalModel$lambdaOpt
-    #predProbs <- predict(model$finalModel, X, lambda = lam, type = 'response')[, 1]
-  } else if(is(model, 'glinternet')){
-    predProbs <- predict(model, X, type = 'response')[, 2]
-  } else if(is(model, 'glm')){
-    predProbs <- predict(model, type = "response")
-  } else if(is(model, 'numeric')){
-    stopifnot(length(model) == length(y))
-    predProbs <- model
-  }
-  p <- unname(sort(predProbs))
-  if(thresh | prc){
-    t1 <- (c(-Inf, p) + c(p, +Inf))/2
-    t2 <- (c(-Inf, p)/2 + c(p, +Inf)/2)
-    p <- ifelse(abs(t1) > 1e+100, t2, t1)
-    #p <- p[-c(1, length(p))]
-  }
-  preds <- list()
-  tp <- tn <- fp <- fn <- c()
-  for(i in 1:length(p)){
-    preds[[i]] <- ifelse(predProbs > p[i], 1, 0)
-    Y <- cbind(y, preds[[i]])
-    tn[i] <- sum(Y[Y[, 1] == 0, 1] == Y[Y[, 1] == 0, 2])
-    tp[i] <- sum(Y[Y[, 1] == 1, 1] == Y[Y[, 1] == 1, 2])
-    fn[i] <- sum(Y[Y[, 2] == 0, 1] != Y[Y[, 2] == 0, 2])
-    fp[i] <- sum(Y[Y[, 2] == 1, 1] != Y[Y[, 2] == 1, 2])
-  }
-  sens <- tp/sum(y)
-  spec <- tn/(length(y) - sum(y))
-  npv <- tn/(tn + fn)
-  ppv <- tp/(tp + fp)
-  #npv <- 1 - (tp/(tp + fp))
-  #ppv <- 1 - (tn/(tn + fn))
-  #opt <- which.max(sens + spec)
-  opt <- ifelse(isTRUE(prc), which.max(ppv + sens), which.max(sens + spec))
-  optCut <- p[opt]
-  optSens <- sens[opt]
-  optSpec <- spec[opt]
-  optPPV <- ppv[opt]
-  optNPV <- npv[opt]
-  if(isTRUE(prc)){
-    sx <- c(1, sens)
-    sy <- c(0, ppv)
-    if(any(is.na(sy))){
-      if(sum(is.na(sy)) == 1){
-        sy <- na.omit(sy)
-      } else {
-        sy[which(is.na(sy))] <- sx[which(is.na(sy))]
-      }
-    }
-    if(length(sy) < length(sx)){sy <- c(sy, 1)}
-    height <- sy[-1] - sy[-length(sy)]
-    width <- (sx[-1] + sx[-length(sx)])/2
-  } else {
-    sx <- c(0, spec)
-    sy <- c(1, sens)
-    height <- (sy[-1] + sy[-length(sy)])/2
-    width <- sx[-1] - sx[-length(sx)]
-  }
-  AUC <- sum(height * width)
-  if(plot == FALSE){
-    return(list(results = data.frame(cutoff = p, sens = sens, spec = spec, ppv = ppv, npv = npv),
-                optimal = unlist(list(cutoff = optCut, sensitivity = optSens,
-                                      specificity = optSpec, PPV = optPPV,
-                                      NPV = optNPV)), AUC = AUC))
-  } else {
-    xlabel <- ifelse(isTRUE(prc), 'Recall', '1 - Specificity')
-    ylabel <- ifelse(isTRUE(prc), 'Precision', 'Sensitivity')
-    main <- ifelse(isTRUE(prc), paste0('PR Curve\nAUC = ', round(AUC, 3)),
-                   paste0('ROC Curve\nAUC = ', round(AUC, 3)))
-    plot(0, 0, type = "n", ylim = c(0, 1), xlim = c(0, 1), axes = FALSE,
-         xlab = xlabel, ylab = ylabel, main = main)
-    if(grid != FALSE){
-      if(grid == TRUE){grid <- 1}
-      if(grid == 1){
-        grid(NA, 5, lty = grid_lty, lwd = grid_lwd, col = grid_col)
-      } else if(grid == 2){
-        grid(lty = grid_lty, lwd = grid_lwd, col = grid_col)
-      }
-    }
-    axis(1); axis(2)
-    if(isTRUE(prc)){sx <- 1 - sx}
-    lines(1 - sx, sy, lty = roc_lty, lwd = roc_lwd, col = roc_col)
-    if(midline != FALSE & !isTRUE(prc)){
-      if(midline == TRUE){midline <- 1}
-      if(midline == "grey" | midline == "gray"){midline_lty <- 1; midline_col = "grey"}
-      if(midline == 2){midline_lty <- 1; midline_col = "grey"}
-      abline(a = 0, b = 1, lty = midline_lty, lwd = midline_lwd, col = midline_col)
-    }
-    if(optPoint != FALSE){
-      if(optPoint == "black" | optPoint == 2){pt_pch <- 8; pt_col <- "black"}
-      if(!pt_pch %in% c(21:25)){pt_border <- pt_col}
-      points((1 - sx)[opt + 1], sy[opt + 1], pch = pt_pch, bg = pt_col, col = pt_border)
-    }
-  }
-}
-
+##### ROCcurve
 
 ##### coefs
 coefs <- function(fit, inds = FALSE, gamma = .5){
@@ -659,60 +539,17 @@ simpsim <- function(n = 50, p = 3, env = FALSE, binary = TRUE, qt = .2,
   }
 }
 
-##### capitalize: capitalize strings
-capitalize <- function(x){
-  unname(sapply(x, function(z){
-    z1 <- substr(z, 1, 1)
-    z2 <- substr(z, 2, nchar(z))
-    lower <- which(letters == z1)
-    if(length(lower) != 0){z1 <- LETTERS[lower]}
-    return(paste0(z1, z2))
-  }))
-}
-
 
 ### ------------------------------------------------------------------------ ###
 ### --------------------------- CARET WRAPPERS ----------------------------- ###
 ### ------------------------------------------------------------------------ ###
-##### ctrl: easily creates control parameters
-ctrl <- function(type = 2, method = 'cv', n = 10, cvreps = 3,
-                 sumfun = 'default', res = 'final',
-                 preds = 'all', verbose = TRUE, ...){
-  k <- n
-  suppressMessages(invisible(require(caret)))
-  if(is.numeric(type)){
-    type <- pmin(2, pmax(1, type))
-  } else if(is.character(type)){
-    types <- c('regression', 'classification')
-    type <- which(types == match.arg(tolower(type), types))
-  }
-  classProbs <- isTRUE(type == 2)
-  args0 <- tryCatch({list(...)}, error = function(e){list()})
-  method <- tolower(method)
-  if(startsWith(method, 'l')){method <- toupper(method)}
-  if(startsWith(method, 'r')){method <- 'repeatedcv'}
-  args <- list(method = method, number = k, returnResamp = res, savePredictions = preds)
-  if(method == 'repeatedcv'){args$repeats <- cvreps}
-  if(type == 1){
-    if(identical(sumfun, 'default')){sumfun <- caret::defaultSummary}
-    if(is.function(sumfun)){args$summaryFunction <- sumfun}
-  } else {
-    if(identical(sumfun, 'default')){sumfun <- twoclass2}
-    if(is.function(sumfun)){args$summaryFunction <- sumfun}
-    args$classProbs <- classProbs
-  }
-  args <- append(args, args0[setdiff(names(args0), names(args))])
-  args$verboseIter <-  isTRUE(verbose)
-  do.call(caret::trainControl, args)
-}
-
 
 ##### twoclass2
 twoclass2 <- function(data, lev = NULL, model = NULL){
   if(length(lev) > 2){
     stop(paste("Your outcome has", length(lev), "levels. The twoClassSummary() function isn't appropriate."))
   }
-  caret:::requireNamespaceQuietStop("pROC")
+  #caret:::requireNamespaceQuietStop("pROC") # NEW
   if(!all(levels(data[, "pred"]) == lev)){
     stop("levels of observed and predicted data do not match")
   }
@@ -735,7 +572,7 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
   mcc <- ((tp * tn) - (fp * fn))/sqrt(ifelse(identical(bottom, 0), 1, bottom))
   if(is.na(mcc)){mcc <- 0}
   #kappa <- kappa['kappa']
-  caret:::requireNamespaceQuietStop("e1071")
+  #caret:::requireNamespaceQuietStop("e1071") # NEW
   kappa <- unlist(e1071::classAgreement(table(obs, pred)))[c("diag", "kappa")]['kappa']
   rocObject <- try(pROC::roc(data$obs, data[, lev[2]], direction = "<",
                              quiet = TRUE), silent = TRUE)
@@ -751,135 +588,9 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
   out
 }
 
+##### ctrl
 
-##### trainFit: DMwR package no longer available on CRAN
-trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
-                     lams = 'default', metric = 'default', pre = NULL, grid = NULL,
-                     model = 'glint', seed = NULL, time = TRUE, ...){
-  t1 <- Sys.time()
-  suppressMessages(invisible(require(caret)))
-  args0 <- tryCatch({list(...)}, error = function(e){list()})
-  if(any(sapply(m, identical, 'all'))){m <- gsub('all', 'zzzall', m)}
-  if(identical(m, 'glmnet') | identical(m, 'glint')){model <- m; m <- 'zzzall'}
-  #if(is.character(m)){if(m %in% c('glmnet', 'glint')){model <- m}; m <- 0}
-  if(!identical(subsample, 'none') & !'sampling' %in% names(args0)){
-    subsample <- match.arg(tolower(subsample), c('down', 'up', 'smote', 'rose'))
-    fun <- switch(subsample, down = caret::downSample, up = caret::upSample,
-                  #smote = function(x, y){DMwR::SMOTE(Class ~ ., data = data.frame(cbind(x, Class = y)))},
-                  rose = function(x, y){ROSE::ROSE(Class ~ ., data = data.frame(cbind(x, Class = y)))$data})
-    out <- fun(x = x, y = y)
-    y <- out[, 'Class']
-    x <- out[, setdiff(colnames(out), 'Class')]
-  }
-  if(is.null(grid) & identical(model, 'glint')){
-    if(identical(lams, 'default')){lams <- 50}
-    if(ifelse(length(lams) == 1, identical(round(lams), lams), FALSE)){
-      lams <- lambdaGrid(x, y, lams, trim = TRUE)
-    }
-    grid <- expand.grid(m = m, lambda = lams, stringsAsFactors = FALSE)
-  }
-  glint_mod <- list(
-    label = 'Hierarchical LASSO',
-    library = c('glinternet', 'Matrix', 'PRROC'),
-    type = c('Regression', 'Classification'),
-    parameters = data.frame(parameter = c('lambda', 'm'),
-                            class = c('numeric', 'character'),
-                            label = c('tuning', 'interaction')),
-    grid = function(x, y, len = NULL, search = 'grid'){
-      numLev <- ifelse(is.character(y) | is.factor(y), dim(table(y)), NA)
-      fam <- ifelse(is.na(numLev), 'gaussian', 'binomial')
-      yy <- y
-      if(is.factor(yy) & dim(table(yy)) == 2){
-        levels(yy) <- 0:1
-        yy <- as.numeric(as.character(yy))
-      }
-      lams <- unique(lambdaGrid(X = x, Y = yy, nLambda = len + 2, family = fam))
-      lams <- lams[-c(1, length(lams))]
-      lams <- lams[1:min(length(lams), len)]
-      expand.grid(m = colnames(x), lambda = lams, stringsAsFactors = FALSE)
-    },
-    loop = NULL,
-    fit = function(x, y, wts, param, lev, last, classProbs, ...){
-      mod <- glint(x = x, y = y, m = param$m, lambda = lams)
-      mod <- mod$fitobj$fit
-      mod$lambdaOpt <- param$lambda[1]
-      #mod$lambdaOpt <- mod$lambda[which.min(abs(mod$lambda - param$lambda[1]))]
-      if(dim(table(y)) == 2){
-        mod$obsLevels <- switch(2 - is.factor(y), levels(y), unique(y))
-      }
-      mod
-    },
-    predict = function(modelFit, newdata, submodels = NULL){
-      if(!is.matrix(newdata)){newdata <- as.matrix(newdata)}
-      obsLevels <- modelFit$obsLevels
-      lam <- modelFit$lambdaOpt
-      #lam <- modelFit$lambda[which.min(abs(modelFit$lambdaOpt - modelFit$lambda))]
-      if(length(obsLevels) < 2){
-        predict(modelFit, newdata, lambda = lam)[, 1]
-      } else {
-        preds <- predict(modelFit, newdata, lambda = lam, type = 'response')[, 1]
-        ifelse(preds < .5, obsLevels[1], obsLevels[2])
-      }
-    },
-    prob = function(modelFit, newdata, submodels = NULL){
-      if(!is.matrix(newdata)){newdata <- as.matrix(newdata)}
-      obsLevels <- switch(2 - ('obsLevels' %in% names(modelFit)), modelFit$obsLevels, NULL)
-      #lam <- modelFit$lambdaOpt
-      #modelFit <- glint(x = newdata, fit = modelFit)$fit0
-      #lam <- modelFit$lambda[which.min(abs(modelFit$lambdaOpt - modelFit$lambda))]
-      lam <- modelFit$lambdaOpt
-      out <- predict(modelFit, newdata, lambda = lam, type = 'response')
-      if(length(obsLevels) == 2){
-        out <- out[, 1]
-        out <- as.data.frame(cbind(1 - out, out), stringsAsFactors = FALSE)
-        colnames(out) <- obsLevels
-      } else {
-        out <- as.data.frame(out[, , 1, drop = FALSE], stringsAsFactors = FALSE)
-        names(out) <- obsLevels
-      }
-      out
-    },
-    levels = function(x){if(any(names(x) == 'obsLevels')){x$obsLevels} else {NULL}},
-    sort = function(x){x[order(-x$lambda, x$m), ]}
-  )
-  if(ifelse(is(k, 'list'), all(names(k) %in% formalArgs(ctrl)), FALSE)){
-    args0[names(k)] <- k
-    k <- 'default'
-  }
-  if(identical(k, 'default')){
-    a1 <- list(type = ifelse(dim(table(y)) == 2, 2, 1))
-    a0 <- intersect(names(args0), c(formalArgs(ctrl), formalArgs(caret::trainControl)))
-    if(length(a0) > 0){a1 <- append(a1, args0[a0])}
-    k <- do.call(ctrl, a1)
-  }
-  if('method' %in% names(args0)){args0 <- args0[setdiff(names(args0), 'method')]}
-  if(identical(metric, 'default')){metric <- ifelse(dim(table(y)) == 2, 'ROC', 'RMSE')}
-  model <- switch(2 - identical(model, 'glint'), glint_mod, 'glmnet')
-  args <- list(x = x, y = y, method = model, trControl = k, metric = metric)
-  if(!is.null(pre)){args$preProcess <- pre}
-  if(identical(model, 'glmnet')){
-    if(length(lams) == 1){
-      nlam <- ifelse(identical(lams, 'default'), 101, lams)
-      lams <- glmnet::glmnet(x = as.matrix(x), y = y, alpha = 1,
-                             family = ifelse(dim(table(y)) == 2, 'binomial', 'gaussian'),
-                             nlambda = nlam + 2)$lambda
-      lams <- unique(lams)
-      lams <- lams[-c(1, length(lams))]
-      lams <- lams[1:min(length(lams), nlam)]
-    }
-    args$tuneGrid <- expand.grid(alpha = 1, lambda = lams)
-  } else {
-    args$tuneGrid <- grid
-  }
-  if(length(args0) > 0){
-    args <- append(args, args0[intersect(names(args0), formalArgs(train))])
-  }
-  if('tuneLength' %in% names(args) & identical(model, 'glmnet')){args$tuneGrid <- NULL}
-  output <- suppressWarnings(do.call(caret::train, args))
-  if(isTRUE(time)){print(t2 <- Sys.time() - t1)}
-  return(output)
-}
-
+##### trainFit
 
 ##### test_roc
 test_roc <- function(fit, x = NULL, y = NULL, v = TRUE, ci = TRUE){
@@ -926,7 +637,7 @@ classperf <- function(pred, obs, metric = 'sens', p = levels(obs)[2]){
   if(any(nchar(metric) < 4)){
     metric[nchar(metric) < 4] <- toupper(metric[nchar(metric) < 4])
   }
-  caret:::requireNamespaceQuietStop("e1071")
+  #caret:::requireNamespaceQuietStop("e1071") # NEW
   kappa <- unlist(e1071::classAgreement(table(obs, pred)))[c("diag", "kappa")]
   kappa <- kappa['kappa']
   tp <- sum(pred %in% p & obs %in% p)
