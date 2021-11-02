@@ -149,7 +149,25 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
   return(output)
 }
 
-##### ctrl: easily creates control parameters
+#' Create control parameters for \code{trainFit}
+#'
+#' Description
+#'
+#' @param type TBD
+#' @param method TBD
+#' @param n TBD
+#' @param cvreps TBD
+#' @param sumfun TBD
+#' @param res TBD
+#' @param preds TBD
+#' @param verbose TBD
+#' @param ... Additional arguments
+#'
+#' @return TBD
+#' @export
+#'
+#' @examples
+#' ctrl()
 ctrl <- function(type = 2, method = 'cv', n = 10, cvreps = 3,
                  sumfun = 'default', res = 'final',
                  preds = 'all', verbose = TRUE, ...){

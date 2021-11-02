@@ -2,7 +2,9 @@
 
 export(ROCcurve)
 export(catdata)
+export(ctrl)
 export(glint)
+export(simpsim)
 export(test_roc)
 export(trainFit)
 import(ggplot2)
