@@ -1,6 +1,6 @@
 Package: relapseRisk
 Title: Predict Risk of Relapse for Anorexia Nervosa Recovery
-Version: 0.0.0.9000
+Version: 0.3.0.9000
 Authors@R: 
     person(given = "Trevor",
            family = "Swanson",
