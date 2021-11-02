@@ -1,4 +1,36 @@
-##### ROCcurve:
+#' Receiver operating characteristic and precision-recall curves
+#'
+#' Construct receiver operating characteristic (ROC) and precision-recall curves
+#' (PRC).
+#'
+#' @param y Outcome variable vector
+#' @param X Matrix of predictors
+#' @param model Optional. Supply logistic regression model.
+#' @param plot Logical. Determines whether to plot the ROC or PRC results.
+#' @param optPoint Logical. Determines whether to plot the optimal threshold
+#'   value on the plot.
+#' @param grid
+#' @param grid_lty
+#' @param grid_lwd
+#' @param grid_col
+#' @param midline
+#' @param midline_lty
+#' @param midline_lwd
+#' @param midline_col
+#' @param pt_pch
+#' @param pt_border
+#' @param pt_col
+#' @param thresh
+#' @param roc_lty
+#' @param roc_lwd
+#' @param roc_col
+#' @param prc Logical. Determines whether to create a PRC (if \code{TRUE}) or an
+#'   ROC (if \code{FALSE}).
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ROCcurve <- function(y, X = NULL, model = NULL, plot = FALSE, optPoint = TRUE,
                      grid = FALSE, grid_lty = 3, grid_lwd = 1.5, grid_col = "lightgray",
                      midline = TRUE, midline_lty = 2, midline_lwd = 2, midline_col = "red",

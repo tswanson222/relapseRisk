@@ -1,7 +1,28 @@
 ### ------------------------------------------------------------------------ ###
 ### -------------------------- CUSTOM FUNCTIONS ---------------------------- ###
 ### ------------------------------------------------------------------------ ###
-##### glint: reshaping glinternet output, and performs criterion-based selection
+#' Reshaping glinternet output using criterion-based selection
+#'
+#' @param x
+#' @param y
+#' @param method
+#' @param m
+#' @param type
+#' @param gamma
+#' @param nlam
+#' @param useSE
+#' @param nfolds
+#' @param allCoef
+#' @param fit
+#' @param lambda
+#' @param intOnly
+#' @param lamNum
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
                   gamma = .5, nlam = 50, useSE = TRUE, nfolds = 10,
                   allCoef = FALSE, fit = NULL, lambda = NULL,

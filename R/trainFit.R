@@ -1,4 +1,24 @@
 ##### trainFit: DMwR package no longer available on CRAN
+#' Algorithm for iterated resampling and model fitting
+#'
+#' @param x
+#' @param y
+#' @param k
+#' @param m
+#' @param subsample
+#' @param lams
+#' @param metric
+#' @param pre
+#' @param grid
+#' @param model
+#' @param seed
+#' @param time
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
                      lams = 'default', metric = 'default', pre = NULL, grid = NULL,
                      model = 'glint', seed = NULL, time = TRUE, ...){
