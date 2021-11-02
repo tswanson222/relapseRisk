@@ -21,11 +21,38 @@ trainFit(
 )
 }
 \arguments{
-\item{...}{}
+\item{x}{TBD}
+
+\item{y}{TBD}
+
+\item{k}{TBD}
+
+\item{m}{TBD}
+
+\item{subsample}{TBD}
+
+\item{lams}{TBD}
+
+\item{metric}{TBD}
+
+\item{pre}{TBD}
+
+\item{grid}{TBD}
+
+\item{model}{TBD}
+
+\item{seed}{TBD}
+
+\item{time}{TBD}
+
+\item{...}{Additional arguments}
 }
 \value{
-
+TBD
 }
 \description{
-Algorithm for iterated resampling and model fitting
+Description
+}
+\examples{
+1 + 1
 }

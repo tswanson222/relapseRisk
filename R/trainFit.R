@@ -1,29 +1,32 @@
 ##### trainFit: DMwR package no longer available on CRAN
 #' Algorithm for iterated resampling and model fitting
 #'
-#' @param x
-#' @param y
-#' @param k
-#' @param m
-#' @param subsample
-#' @param lams
-#' @param metric
-#' @param pre
-#' @param grid
-#' @param model
-#' @param seed
-#' @param time
-#' @param ...
+#' Description
 #'
-#' @return
+#' @param x TBD
+#' @param y TBD
+#' @param k TBD
+#' @param m TBD
+#' @param subsample TBD
+#' @param lams TBD
+#' @param metric TBD
+#' @param pre TBD
+#' @param grid TBD
+#' @param model TBD
+#' @param seed TBD
+#' @param time TBD
+#' @param ... Additional arguments
+#'
+#' @return TBD
 #' @export
 #'
 #' @examples
+#' 1 + 1
 trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
                      lams = 'default', metric = 'default', pre = NULL, grid = NULL,
                      model = 'glint', seed = NULL, time = TRUE, ...){
   t1 <- Sys.time()
-  suppressMessages(invisible(require(caret)))
+  #suppressMessages(invisible(require(caret)))
   args0 <- tryCatch({list(...)}, error = function(e){list()})
   if(any(sapply(m, identical, 'all'))){m <- gsub('all', 'zzzall', m)}
   if(identical(m, 'glmnet') | identical(m, 'glint')){model <- m; m <- 'zzzall'}
@@ -138,7 +141,7 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
     args$tuneGrid <- grid
   }
   if(length(args0) > 0){
-    args <- append(args, args0[intersect(names(args0), formalArgs(train))])
+    args <- append(args, args0[intersect(names(args0), formalArgs(caret::train))])
   }
   if('tuneLength' %in% names(args) & identical(model, 'glmnet')){args$tuneGrid <- NULL}
   output <- suppressWarnings(do.call(caret::train, args))
@@ -151,7 +154,7 @@ ctrl <- function(type = 2, method = 'cv', n = 10, cvreps = 3,
                  sumfun = 'default', res = 'final',
                  preds = 'all', verbose = TRUE, ...){
   k <- n
-  suppressMessages(invisible(require(caret)))
+  #suppressMessages(invisible(require(caret)))
   if(is.numeric(type)){
     type <- pmin(2, pmax(1, type))
   } else if(is.character(type)){

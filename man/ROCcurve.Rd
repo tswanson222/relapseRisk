@@ -40,13 +40,46 @@ ROCcurve(
 \item{optPoint}{Logical. Determines whether to plot the optimal threshold
 value on the plot.}
 
+\item{grid}{TBD}
+
+\item{grid_lty}{TBD}
+
+\item{grid_lwd}{TBD}
+
+\item{grid_col}{TBD}
+
+\item{midline}{TBD}
+
+\item{midline_lty}{TBD}
+
+\item{midline_lwd}{TBD}
+
+\item{midline_col}{TBD}
+
+\item{pt_pch}{TBD}
+
+\item{pt_border}{TBD}
+
+\item{pt_col}{TBD}
+
+\item{thresh}{TBD}
+
+\item{roc_lty}{TBD}
+
+\item{roc_lwd}{TBD}
+
+\item{roc_col}{TBD}
+
 \item{prc}{Logical. Determines whether to create a PRC (if \code{TRUE}) or an
 ROC (if \code{FALSE}).}
 }
 \value{
-
+TBD
 }
 \description{
 Construct receiver operating characteristic (ROC) and precision-recall curves
 (PRC).
+}
+\examples{
+1 + 1
 }

@@ -1,8 +1,27 @@
+#' Pull survey responses and theta values from PiLR data
+#'
+#' Used for pulling patient data and organizing for therapist output.
+#'
+#' @param file Name of path to file to draw data from
+#' @param day Indicate a particular day to draw data from YYYY-MM-DD
+#' @param type Select between \code{"cat", "demographics", "weekly"}. Currently
+#'   only works with \code{"cat"}
+#' @param process Logical. If \code{TRUE}, re-formats PiLR data. Recommended to
+#'   leave as \code{TRUE}.
+#' @param questions Determines which set of responses to choose from. Not sure
+#'   exactly how to edit.
+#'
+#' @return A list containing theta values along with standard errors, as well as
+#'   table of participant items and responses.
+#' @export
+#'
+#' @examples
+#' 1 + 1
 catdata <- function(file = NULL, day = NULL, type = 'cat', process = TRUE,
                     questions = 'last'){
   if(is.null(file)){file <- 'forbushtest1_7_31_20.csv'}
-  questions_epsi <- trimws(as.character(readRDS('questions_epsi.RDS')))
-  questions_epsi[37] <- gsub('<93>unhealthy<94>', 'unhealthy', questions_epsi[37])
+  questions_epsi <- epsi_idas_questions$questions_epsi
+  questions_idas <- epsi_idas_questions$questions_idas
   type <- match.arg(tolower(type), c('cat', 'demographics', 'weekly'))
   x <- read.csv(file, stringsAsFactors = FALSE)
   k <- unique(x$survey_code)
@@ -11,7 +30,8 @@ catdata <- function(file = NULL, day = NULL, type = 'cat', process = TRUE,
     k <- switch(type, demographics = 'cat_demographic_survey',
                 weekly = 'weekly_behaviors')
   }
-  x2 <- subset(x, survey_code == k & event_type == 'response' & question_type != 'instruction')
+  # Edit this line -- designed for use with EPSI only, need to extend to IDAS
+  x2 <- subset(x, survey_code == k[1] & event_type == 'response' & question_type != 'instruction')
   x2$date <- as.Date(x2$metadata..timestamp)
   if(!is.null(day)){x2 <- subset(x2, date == day)}
   if(isTRUE(process) & type == 'cat'){

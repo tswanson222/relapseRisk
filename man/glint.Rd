@@ -23,11 +23,42 @@ glint(
 )
 }
 \arguments{
-\item{...}{}
+\item{x}{TBD}
+
+\item{y}{TBD}
+
+\item{method}{TBD}
+
+\item{m}{TBD}
+
+\item{type}{TBD}
+
+\item{gamma}{TBD}
+
+\item{nlam}{TBD}
+
+\item{useSE}{TBD}
+
+\item{nfolds}{TBD}
+
+\item{allCoef}{TBD}
+
+\item{fit}{TBD}
+
+\item{lambda}{TBD}
+
+\item{intOnly}{TBD}
+
+\item{lamNum}{TBD}
+
+\item{...}{Additional arguments}
 }
 \value{
-
+TBD
 }
 \description{
-Reshaping glinternet output using criterion-based selection
+Description. May not even be needed as global function.
+}
+\examples{
+1 + 1
 }

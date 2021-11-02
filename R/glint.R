@@ -3,35 +3,37 @@
 ### ------------------------------------------------------------------------ ###
 #' Reshaping glinternet output using criterion-based selection
 #'
-#' @param x
-#' @param y
-#' @param method
-#' @param m
-#' @param type
-#' @param gamma
-#' @param nlam
-#' @param useSE
-#' @param nfolds
-#' @param allCoef
-#' @param fit
-#' @param lambda
-#' @param intOnly
-#' @param lamNum
-#' @param ...
+#' Description. May not even be needed as global function.
 #'
-#' @return
+#' @param x TBD
+#' @param y TBD
+#' @param method TBD
+#' @param m TBD
+#' @param type TBD
+#' @param gamma TBD
+#' @param nlam TBD
+#' @param useSE TBD
+#' @param nfolds TBD
+#' @param allCoef TBD
+#' @param fit TBD
+#' @param lambda TBD
+#' @param intOnly TBD
+#' @param lamNum TBD
+#' @param ... Additional arguments
+#'
+#' @return TBD
 #' @export
 #'
 #' @examples
+#' 1 + 1
 glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
                   gamma = .5, nlam = 50, useSE = TRUE, nfolds = 10,
                   allCoef = FALSE, fit = NULL, lambda = NULL,
                   intOnly = FALSE, lamNum = FALSE, ...){
   if(!missing(x)){if(is(x, 'train')){fit <- x; x <- NULL}}
-  suppressMessages(invisible(require(glinternet)))
+  #suppressMessages(invisible(require(glinternet)))
   if(length(method) > 1){fit <- method; method <- 'aic'}
-  suppressMessages(invisible(require(glinternet)))
-  suppressMessages(invisible(require(Matrix)))
+  #suppressMessages(invisible(require(Matrix)))
   dots <- function(k, ff = NULL, safe = TRUE){
     ff <- deparse(substitute(ff))
     ff <- tryCatch({eval(parse(text = ff))}, error = function(e){list()})
@@ -310,8 +312,8 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
     fitobj <- list(fit = fit, fit0 = NA, crit = ic_lambda)
     if(length(fit$lambda) > 2){
       fitobj$fit0  <- dots(
-        glinternet(x, y, type, interactionCandidates = m,
-                   lambda = lambda_min, family = family, ...)
+        glinternet::glinternet(x, y, type, interactionCandidates = m,
+                               lambda = lambda_min, family = family, ...)
       )
     } else {
       fitobj$fit0 <- fit
@@ -329,7 +331,7 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
 }
 
 
-##### lambdaGrid: Just returns lambda values from glinternet
+##### lambdaGrid: Just returns lambda values from glinternet. Global?
 lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL, numLevels,
                       lambdaMinRatio = 0.01, interactionPairs = NULL, screenLimit = NULL,
                       numToFind = NULL, family = c("gaussian", "binomial"),
@@ -337,7 +339,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
                       numCores = 1, lamOnly = TRUE){
   # get call and family
   interactionCandidates <- m
-  suppressMessages(invisible(require(glinternet)))
+  #suppressMessages(invisible(require(glinternet)))
   if(dim(table(Y)) == 2){
     if(is.factor(Y)){
       levels(Y) <- 0:1
@@ -464,27 +466,27 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
     if (verbose) {
       cat("lambda ", i, ": ", lambda[i], "\n")
     }
-    activeSet[[i]] = strong_rules(candidates, lambda[i], lambda[i-1])
-    betahat[[i]] = initialize_betahat(activeSet[[i]], activeSet[[i-1]], betahat[[i-1]], levels)
+    activeSet[[i]] = glinternet:::strong_rules(candidates, lambda[i], lambda[i-1])
+    betahat[[i]] = glinternet:::initialize_betahat(activeSet[[i]], activeSet[[i-1]], betahat[[i-1]], levels)
     while (TRUE) {
       # group lasso on strong set
-      solution = group_lasso(Xcat, Z, Y, activeSet[[i]], betahat[[i]], levels, lambda[i], family, tol, maxIter, verbose)
+      solution = glinternet:::group_lasso(Xcat, Z, Y, activeSet[[i]], betahat[[i]], levels, lambda[i], family, tol, maxIter, verbose)
       activeSet[[i]] = solution$activeSet
       betahat[[i]] = solution$betahat
       res = solution$res
       objValue[i] = solution$objValue
       # check kkt conditions on the rest
-      check = check_kkt(Xcat, Z, res, n, pCat, pCont, levels, candidates, activeSet[[i]], lambda[i], numCores)
+      check = glinternet:::check_kkt(Xcat, Z, res, n, pCat, pCont, levels, candidates, activeSet[[i]], lambda[i], numCores)
       candidates$norms = check$norms
       if (check$flag) {
         break
       }
-      betahat[[i]] = initialize_betahat(check$activeSet, activeSet[[i]], betahat[[i]], levels)
+      betahat[[i]] = glinternet:::initialize_betahat(check$activeSet, activeSet[[i]], betahat[[i]], levels)
       activeSet[[i]] = check$activeSet
     }
     # update the candidate set if necessary
     if (!is.null(screenLimit) && (screenLimit<pCat+pCont) && i<nLambda) {
-      candidates = get_candidates(Xcat, Z, res, n, pCat, pCont, levels, interactionPairs, categoricalCandidates, continuousCandidates, screenLimit, activeSet[[i]], candidates$norms, numCores)
+      candidates = glinternet:::get_candidates(Xcat, Z, res, n, pCat, pCont, levels, interactionPairs, categoricalCandidates, continuousCandidates, screenLimit, activeSet[[i]], candidates$norms, numCores)
     }
     # get fitted values
     fitted[, i] = Y - res
@@ -499,7 +501,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
 
   # rescale betahat
   Z = as.matrix(X[, numLevels==1])
-  betahatRescaled = lapply(1:i, function(j) rescale_betahat(activeSet[[j]], betahat[[j]], Xcat, Z, levels, n))
+  betahatRescaled = lapply(1:i, function(j) glinternet:::rescale_betahat(activeSet[[j]], betahat[[j]], Xcat, Z, levels, n))
 
   output = list(call=thisCall, fitted=fitted[, 1:i], lambda=lambda[1:i], objValue=objValue, activeSet=activeSet[1:i], betahat=betahatRescaled[1:i], numLevels=numLevels, family=family)
   class(output) = "glinternet"
@@ -507,9 +509,7 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
   return (output)
 }
 
-##### ROCcurve
-
-##### coefs
+##### coefs: MIGHT NOT NEED
 coefs <- function(fit, inds = FALSE, gamma = .5){
   if(!is(fit, 'train')){
     if('coefs' %in% names(fit)){return(fit$coefs)} else {return(list())}
@@ -535,7 +535,7 @@ coefs <- function(fit, inds = FALSE, gamma = .5){
 }
 
 
-##### simpsim
+##### simpsim: simulate class imbalance data
 simpsim <- function(n = 50, p = 3, env = FALSE, binary = TRUE, qt = .2,
                     levs = c('Class1', 'Class2'), b = NULL, intercept = FALSE,
                     mu = 0, sigma = NULL){
@@ -565,7 +565,7 @@ simpsim <- function(n = 50, p = 3, env = FALSE, binary = TRUE, qt = .2,
 ### --------------------------- CARET WRAPPERS ----------------------------- ###
 ### ------------------------------------------------------------------------ ###
 
-##### twoclass2
+##### twoclass2: probably only internal
 twoclass2 <- function(data, lev = NULL, model = NULL){
   if(length(lev) > 2){
     stop(paste("Your outcome has", length(lev), "levels. The twoClassSummary() function isn't appropriate."))
@@ -574,7 +574,7 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
   if(!all(levels(data[, "pred"]) == lev)){
     stop("levels of observed and predicted data do not match")
   }
-  suppressMessages(invisible(require('PRROC')))
+  #suppressMessages(invisible(require('PRROC')))
   ppreds0 <- data[which(data[, "obs"] == lev[2]), lev[2]]
   ppreds1 <- data[which(data[, "obs"] == lev[1]), lev[2]]
   p <- lev[2]; n <- lev[1]
@@ -609,43 +609,8 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
   out
 }
 
-##### ctrl
 
-##### trainFit
-
-##### test_roc
-test_roc <- function(fit, x = NULL, y = NULL, v = TRUE, ci = TRUE){
-  suppressMessages(invisible(library(pROC)))
-  if(!isTRUE(ci)){v <- FALSE}
-  if(!is.null(x)){if(is.logical(x)){v <- x; x <- NULL}}
-  if(!is.null(y)){if(is.logical(y)){v <- y; y <- NULL}}
-  if(is(fit, 'list')){
-    if(is.null(names(fit))){names(fit) <- paste0('fit', 1:length(fit))}
-    args <- as.list(match.call())[-1]
-    out <- lapply(fit, function(z){
-      args0 <- replace(args, 'fit', list(fit = z))
-      do.call(test_roc, args0)
-    })
-    nn <- names(out)
-    out <- setNames(do.call(rbind.data.frame, lapply(out, as.vector)), c('lower', 'ROC', 'upper'))
-    rownames(out) <- nn
-    return(out)
-  }
-  if(is.null(x) | is.null(y)){
-    xx <- fit$trainingData
-    if(is.null(x)){x <- xx[, setdiff(colnames(xx), '.outcome')]}
-    if(is.null(y)){y <- xx[, '.outcome']}
-  }
-  levs <- levels(y)
-  roc_obj <- roc(y, predict(fit, x, type = "prob")[, levs[2]],
-                 levels = levs)
-  if(isTRUE(ci) | isTRUE(v)){roc_obj <- ci(roc_obj)}
-  if(isTRUE(v)){roc_obj <- setNames(as.vector(roc_obj), c('lower', 'ROC', 'upper'))}
-  roc_obj
-}
-
-
-##### classperf
+##### classperf: possibly global function
 classperf <- function(pred, obs, metric = 'sens', p = levels(obs)[2]){
   stopifnot(is.factor(pred) & is.factor(obs))
   stopifnot(length(unique(c(levels(obs), levels(pred)))) == 2)
@@ -679,7 +644,7 @@ classperf <- function(pred, obs, metric = 'sens', p = levels(obs)[2]){
 }
 
 
-##### sums
+##### sums: possibly global function
 sums <- function(res, metric = 'default', means = TRUE){
   if(!is(res, 'resamples') & is(res, 'list')){res <- caret::resamples(res)}
   mets <- res$metrics
@@ -713,7 +678,7 @@ sums <- function(res, metric = 'default', means = TRUE){
 }
 
 
-##### LL: log-likelihood
+##### LL: possibly global function
 LL <- function(fit, y, x = NULL, int = FALSE){
   if(is.factor(y)){
     levels(y) <- 0:1
@@ -738,7 +703,7 @@ LL <- function(fit, y, x = NULL, int = FALSE){
 }
 
 
-##### getMod
+##### getMod: not sure what this is for
 getMod <- function(fit, metric = 'PRC', row = NULL, crit = 'AIC'){
   if(!is(fit, 'train') & is(fit, 'list')){
     call <- as.list(match.call())[-1]

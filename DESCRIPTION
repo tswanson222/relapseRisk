@@ -18,6 +18,7 @@ RoxygenNote: 7.1.1
 Imports: 
     caret,
     e1071,
+    ggplot2,
     glinternet,
     glmnet,
     MASS,
@@ -26,3 +27,5 @@ Imports:
     pROC,
     PRROC,
     ROSE
+Depends: 
+    R (>= 2.10)

@@ -31,3 +31,18 @@ standard <- function(x){
   }
   return(out)
 }
+
+##### rcov: simulate a random covariance matrix
+rcov <- function(n, dist = "runif", method = 2, args = NULL){
+  inner <- paste0(dist, "(", n^2, ifelse(is.null(args), "", paste0(", ", args)), ")")
+  inner <- eval(parse(text = inner))
+  if(method %in% c(3, 4)){inner <- inner * 2 - 1}
+  S <- matrix(inner, n, n)
+  if(method %in% c(1, 3)){
+    S <- t(S) %*% S
+  } else {
+    S <- qr.Q(qr(S))
+    S <- crossprod(S, S * (n:1))
+  }
+  return(S)
+}
