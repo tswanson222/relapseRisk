@@ -22,7 +22,7 @@ R package for predicting risk of relapse for anorexia nervosa recovery. UNDER CO
 
 ## Background
 
-The following documents demonstrate analyses involved in the construction and evaluation of the machine learning algorithm used to predict recovery outcomes in patients diagnosed with anorexia nervosa. To view these ``.html`` files, the user must download the raw files and then open them in a local web browser. 
+The following documents demonstrate analyses involved in the construction and evaluation of the machine learning algorithm used to predict recovery outcomes in patients diagnosed with anorexia nervosa. To view these documents, the user must download the raw ``.html`` files and then open them in a local web browser. 
 
 [EPSI_thetaAnalysis](./EPSI_thetaAnalysis.html) contains an overview of the initial analysis that led to the construction of this package. This involved analyzing data from previous research on eating disorder patients who completed the Eating Pathology Symptoms Inventory (EPSI) during treatment, and were then re-evalued by therapists during a 6-month and 12-month follow-up to determine whether they had relapsed based on their body-mass index (BMI), number of binge-eating episodes (BE), and compensatory episodes (CE). The objective was to determine whether higher-order factors derived from the patients' EPSI responses were useful in predicting their recovery outcomes. 
 
