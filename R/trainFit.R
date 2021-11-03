@@ -1,4 +1,3 @@
-##### trainFit: DMwR package no longer available on CRAN
 #' Algorithm for iterated resampling and model fitting
 #'
 #' Description
@@ -76,7 +75,7 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
       if(dim(table(y)) == 2){
         mod$obsLevels <- switch(2 - is.factor(y), levels(y), unique(y))
       }
-      mod
+      return(mod)
     },
     predict = function(modelFit, newdata, submodels = NULL){
       if(!is.matrix(newdata)){newdata <- as.matrix(newdata)}
@@ -148,6 +147,7 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
   if(isTRUE(time)){print(t2 <- Sys.time() - t1)}
   return(output)
 }
+
 
 #' Create control parameters for \code{trainFit}
 #'

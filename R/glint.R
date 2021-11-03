@@ -1,6 +1,3 @@
-### ------------------------------------------------------------------------ ###
-### -------------------------- CUSTOM FUNCTIONS ---------------------------- ###
-### ------------------------------------------------------------------------ ###
 #' Reshaping glinternet output using criterion-based selection
 #'
 #' Description. May not even be needed as global function.
@@ -509,10 +506,6 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
   return (output)
 }
 
-
-### ------------------------------------------------------------------------ ###
-### --------------------------- CARET WRAPPERS ----------------------------- ###
-### ------------------------------------------------------------------------ ###
 
 ##### twoclass2: probably only internal
 twoclass2 <- function(data, lev = NULL, model = NULL){

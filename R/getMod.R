@@ -56,6 +56,7 @@ getMod <- function(fit, metric = 'PRC', row = NULL, crit = 'AIC'){
   return(out)
 }
 
+
 #' Return coefficient values from \code{trainFit} model
 #'
 #' Description

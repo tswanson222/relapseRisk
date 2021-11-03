@@ -12,6 +12,7 @@ capitalize <- function(x){
   }))
 }
 
+
 ##### getLambdaGrid: from glinternet
 getLambdaGrid <- function(candidates, nlam, minRatio){
   lmax <- max(sapply(candidates$norms, function(z) ifelse(is.null(z), 0, max(z))))
@@ -20,6 +21,7 @@ getLambdaGrid <- function(candidates, nlam, minRatio){
   lambda <- lmax^(1 - f) * lmin^f
   return(lambda)
 }
+
 
 ##### standard: from glinternet
 standard <- function(x){
@@ -31,6 +33,7 @@ standard <- function(x){
   }
   return(out)
 }
+
 
 ##### rcov: simulate a random covariance matrix
 rcov <- function(n, dist = "runif", method = 2, args = NULL){

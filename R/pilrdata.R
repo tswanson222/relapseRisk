@@ -134,6 +134,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
   x2
 }
 
+
 #' Plot thetas from PiLR app data
 #'
 #' Description
@@ -197,6 +198,7 @@ plotThetas <- function(data, colors = FALSE, zeroLine = TRUE, pointSize = 3, ...
   }
   return(g1)
 }
+
 
 #' Create table of items and responses from PiLR app
 #'

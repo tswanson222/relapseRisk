@@ -42,6 +42,7 @@ test_roc <- function(fit, x = NULL, y = NULL, v = TRUE, ci = TRUE){
   roc_obj
 }
 
+
 #' Summarize results across multiple \code{trainFit} modls
 #'
 #' @param res List of \code{\link{trainFit}} outputs, or output from
