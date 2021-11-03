@@ -21,6 +21,7 @@ Imports:
     ggplot2,
     glinternet,
     glmnet,
+    kableExtra,
     MASS,
     Matrix,
     methods,

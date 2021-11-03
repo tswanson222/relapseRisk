@@ -14,5 +14,6 @@
 #' @importFrom utils combn read.csv
 
 utils::globalVariables(
-  c('question_type', 'session', 'survey_code', 'event_type')
+  c('question_type', 'session', 'survey_code', 'event_type',
+    'Estimate', 'SE', 'Thetas', 'Time')
 )
