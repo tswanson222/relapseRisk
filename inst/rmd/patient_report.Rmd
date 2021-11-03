@@ -18,7 +18,7 @@ participant <- params$participant
 
 # EPSI
 
-```{r thetaViz1, echo = FALSE}
+```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE, }
 plotThetas(data = participant, survey = 'epsi')
 ```
 
@@ -28,7 +28,7 @@ itemTable(data = participant, survey = 'epsi')
 
 # IDAS
 
-```{r thetaViz2, echo = FALSE}
+```{r thetaViz2, echo = FALSE, message = FALSE, warning = FALSE}
 plotThetas(data = participant, survey = 'idas')
 ```
 

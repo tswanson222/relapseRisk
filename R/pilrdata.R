@@ -163,7 +163,7 @@ plotThetas <- function(data, colors = FALSE, zeroLine = TRUE, pointSize = 3, ...
   whiskers <- ifelse(max(thetas$Time) == 1, 0, .035)
   background <- data.frame(xlow = c(0, 0), xhigh = rep(max(thetas$Time) + 1, 2),
                            ylow = c(1.5, -2))
-  if(max(thetas$Time) == 1){
+  if(FALSE){ # max(thetas$Time) == 1
     if(colors){
       g1 <- ggplot(thetas, aes(x = Thetas, y = Estimate, colour = Thetas)) +
         geom_point(size = pointSize, show.legend = c(colour = FALSE))
