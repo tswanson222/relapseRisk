@@ -509,31 +509,6 @@ lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL,
   return (output)
 }
 
-##### coefs: MIGHT NOT NEED
-coefs <- function(fit, inds = FALSE, gamma = .5){
-  if(!is(fit, 'train')){
-    if('coefs' %in% names(fit)){return(fit$coefs)} else {return(list())}
-  }
-  stopifnot(is(fit, 'train'))
-  lam <- fit$bestTune[, 'lambda']
-  if('alpha' %in% names(fit$bestTune)){
-    coef(fit$finalModel, s = lam)
-  } else if(identical(inds, FALSE)){
-    glint(fit = fit)$coefs
-  } else {
-    if(isTRUE(inds) | identical(inds, 'all')){
-      inds <- c('AIC', 'BIC', 'EBIC')
-    }
-    out <- sapply(inds, function(z) glint(fit = fit, method = z, gamma = gamma)[[4]])
-    names(out) <- toupper(names(out))
-    if('EBIC' %in% names(out)){
-      gamma <- gsub('^0[.]', '.', as.character(gamma))
-      names(out)[which(names(out) == 'EBIC')] <- paste0('EBIC', gamma)
-    }
-    return(out)
-  }
-}
-
 
 ### ------------------------------------------------------------------------ ###
 ### --------------------------- CARET WRAPPERS ----------------------------- ###
@@ -618,40 +593,6 @@ classperf <- function(pred, obs, metric = 'sens', p = levels(obs)[2]){
 }
 
 
-##### sums: possibly global function
-sums <- function(res, metric = 'default', means = TRUE){
-  if(!is(res, 'resamples') & is(res, 'list')){res <- caret::resamples(res)}
-  mets <- res$metrics
-  mm <- ifelse(is.character(means), ifelse(
-    means %in% mets, means, 'default'), 'default')
-  if(any(sapply(c(metric, means), identical, 'all'))){metric <- 'default'; means <- 'all'}
-  if(is.logical(metric)){means <- metric; metric <- mm}
-  if(identical(metric, 'default')){
-    metric <- ifelse('MAE' %in% res$metrics, 'RMSE', 'ROC')
-  }
-  s <- summary(res, metric = metric)
-  if(isTRUE(means)){
-    s <- s$statistics[metric]
-    if(length(s) == 1){s <- s[[1]]}
-    return(s)
-  } else if(identical(means, FALSE)){
-    if(length(metric) > 1){
-      out <- setNames(lapply(metric, function(i){
-        z1 <- s$values[, which(gsub('.*.~', '', colnames(s$values)) == i)]
-        names(z1) <- gsub('~.*.', '', names(z1))
-        z1
-      }), metric)
-    } else {
-      out <- s$values[, which(gsub('.*.~', '', colnames(s$values)) == metric)]
-      names(out) <- gsub('~.*.', '', names(out))
-    }
-    return(out)
-  } else {
-    return(s$values)
-  }
-}
-
-
 ##### LL: possibly global function
 LL <- function(fit, y, x = NULL, int = FALSE){
   if(is.factor(y)){
@@ -676,46 +617,3 @@ LL <- function(fit, y, x = NULL, int = FALSE){
   c(ll = ll, AIC = aic, BIC = bic)
 }
 
-
-##### getMod: not sure what this is for
-getMod <- function(fit, metric = 'PRC', row = NULL, crit = 'AIC'){
-  if(!is(fit, 'train') & is(fit, 'list')){
-    call <- as.list(match.call())[-1]
-    return(lapply(fit, function(z){
-      args0 <- replace(call, 'fit', list(fit = z))
-      do.call(getMod, args0)
-    }))
-  }
-  stopifnot(is(fit, 'train'))
-  parms <- c('lambda', 'm')
-  k <- fit$results[, -grep('SD$', colnames(fit$results))]
-  k$F1 <- 2 * ((k$Prec * k$Sens)/(k$Prec + k$Sens))
-  mets <- setdiff(tolower(colnames(k)), parms)
-  metric <- capitalize(match.arg(tolower(metric), mets))
-  if(metric %in% c('Roc', 'Prc', 'Ba', 'Mcc')){metric <- toupper(metric)}
-  if(metric == 'Prauc'){metric <- 'prAUC'}
-  mx <- max(k[, metric], na.rm = TRUE)
-  kk <- k[k[, metric] == mx, ]
-  if(any(is.na(kk))){
-    k0 <- which(apply(kk, 1, function(z) sum(is.na(z))) == ncol(kk))
-    if(length(k0) > 0){kk <- kk[-k0, ]}
-  }
-  if(nrow(kk) > 1 & (is.null(row) | identical(row, FALSE))){
-    k2 <- do.call(rbind, lapply(1:nrow(kk), function(i){
-      ii <- getMod(fit = fit, metric = metric, row = i)[[1]]
-      ints <- ii[grepl(':', ii)]
-      mains <- setdiff(ii, ints)
-      c(vars = length(mains), ints = length(ints))
-    }))
-    return(cbind(k2, kk))
-  } else if(identical(row, 'auto') & nrow(kk) > 1){
-    k1 <- which.min(sapply(1:nrow(kk), function(z) getMod(fit, metric, row = z)[[4]]))
-    kk <- kk[k1, , drop = FALSE]
-  } else if(!is.null(row) & nrow(kk) > 1){
-    kk <- kk[row, , drop = FALSE]
-  }
-  attr(fit$finalModel, 'm') <- kk[, parms[2]]
-  out <- glint(fit, method = crit, lambda = kk[, parms[1]], m = kk[, parms[2]])
-  out$parms <- kk[, parms]
-  return(out)
-}

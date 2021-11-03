@@ -37,7 +37,53 @@ test_roc <- function(fit, x = NULL, y = NULL, v = TRUE, ci = TRUE){
   }
   levs <- levels(y)
   roc_obj <- pROC::roc(y, predict(fit, x, type = "prob")[, levs[2]], levels = levs)
-  if(isTRUE(ci) | isTRUE(v)){roc_obj <- ci(roc_obj)}
+  if(isTRUE(ci) | isTRUE(v)){roc_obj <- pROC::ci(roc_obj)}
   if(isTRUE(v)){roc_obj <- setNames(as.vector(roc_obj), c('lower', 'ROC', 'upper'))}
   roc_obj
+}
+
+#' Summarize results across multiple \code{trainFit} modls
+#'
+#' @param res List of \code{\link{trainFit}} outputs, or output from
+#'   \code{resamples} function from the \code{caret} package.
+#' @param metric Character string or vector indicating which performance metrics
+#'   to summarize
+#' @param means Logical. Determines whether to return means for the performance
+#'   metrics or not.
+#'
+#' @return TBD
+#' @export
+#'
+#' @examples
+#' 1 + 1
+sums <- function(res, metric = 'default', means = TRUE){
+  if(!is(res, 'resamples') & is(res, 'list')){res <- caret::resamples(res)}
+  mets <- res$metrics
+  mm <- ifelse(is.character(means), ifelse(
+    means %in% mets, means, 'default'), 'default')
+  if(any(sapply(c(metric, means), identical, 'all'))){metric <- 'default'; means <- 'all'}
+  if(is.logical(metric)){means <- metric; metric <- mm}
+  if(identical(metric, 'default')){
+    metric <- ifelse('MAE' %in% res$metrics, 'RMSE', 'ROC')
+  }
+  s <- summary(res, metric = metric)
+  if(isTRUE(means)){
+    s <- s$statistics[metric]
+    if(length(s) == 1){s <- s[[1]]}
+    return(s)
+  } else if(identical(means, FALSE)){
+    if(length(metric) > 1){
+      out <- setNames(lapply(metric, function(i){
+        z1 <- s$values[, which(gsub('.*.~', '', colnames(s$values)) == i)]
+        names(z1) <- gsub('~.*.', '', names(z1))
+        z1
+      }), metric)
+    } else {
+      out <- s$values[, which(gsub('.*.~', '', colnames(s$values)) == metric)]
+      names(out) <- gsub('~.*.', '', names(out))
+    }
+    return(out)
+  } else {
+    return(s$values)
+  }
 }
