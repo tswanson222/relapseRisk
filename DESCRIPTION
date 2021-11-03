@@ -27,6 +27,7 @@ Imports:
     methods,
     pROC,
     PRROC,
+    rmarkdown,
     ROSE
 Depends: 
     R (>= 2.10)

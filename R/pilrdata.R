@@ -240,3 +240,29 @@ itemTable <- function(data, time = 'last', ...){
                                    bootstrap_options = c('striped', 'hover', 'responsive'))
   return(out)
 }
+
+
+#' Create patient report
+#'
+#' Description
+#'
+#' @param participant Raw PiLR data or path to .csv file
+#' @param id ID number of participant
+#' @param output Choose the directory of where to output the report. Defaults to
+#'   the current working directory.
+#'
+#' @return Patient report
+#' @export
+#'
+#' @examples
+#' 1 + 1
+createReport <- function(participant, id = 0, output = './'){
+  date <- Sys.Date()
+  input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
+  rmarkdown::render(input = input,
+                    output_file = paste0('patient', id, '_', date, '.html'),
+                    output_dir = output,
+                    params = list(participant = participant,
+                                  set_title = paste0('Patient ', id),
+                                  set_date = date))
+}

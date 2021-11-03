@@ -2,6 +2,7 @@
 
 export(ROCcurve)
 export(coefs)
+export(createReport)
 export(ctrl)
 export(getMod)
 export(glint)

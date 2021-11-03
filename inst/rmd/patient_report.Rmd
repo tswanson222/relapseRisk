@@ -1,0 +1,37 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_float: true
+params: 
+  participant: NULL
+  set_title: "TITLE"
+  set_date: "DATE"
+title: "`r params$set_title`"
+date: "`r params$set_date`"
+---
+
+```{r setup, include = FALSE}
+library(relapseRisk)
+participant <- params$participant
+```
+
+# EPSI
+
+```{r thetaViz1, echo = FALSE}
+plotThetas(data = participant, survey = 'epsi')
+```
+
+```{r table1, echo = FALSE}
+itemTable(data = participant, survey = 'epsi')
+```
+
+# IDAS
+
+```{r thetaViz2, echo = FALSE}
+plotThetas(data = participant, survey = 'idas')
+```
+
+```{r table2, echo = FALSE}
+itemTable(data = participant, survey = 'idas')
+```
