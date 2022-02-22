@@ -7,7 +7,8 @@
 createReport(participant, id = 0, output = "./")
 }
 \arguments{
-\item{participant}{Raw PiLR data or path to .csv file}
+\item{participant}{Raw PiLR data or path to .csv file. If path to file is
+provided, this must be an absolute path not a relative path.}
 
 \item{id}{ID number of participant}
 
