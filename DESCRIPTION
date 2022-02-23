@@ -28,6 +28,7 @@ Imports:
     pROC,
     PRROC,
     rmarkdown,
-    ROSE
+    ROSE,
+    smotefamily
 Depends: 
     R (>= 2.10)
