@@ -34,11 +34,7 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
     subsample <- match.arg(tolower(subsample), c('down', 'up', 'smote', 'rose'))
     fun <- switch(subsample, down = caret::downSample, up = caret::upSample,
                   #smote = function(x, y){DMwR::SMOTE(Class ~ ., data = data.frame(cbind(x, Class = y)))},
-                  smote = function(x, y){
-                    out <- smotefamily::SMOTE(x, y)$data
-                    colnames(out)[which(colnames(out) == 'class')] <- 'Class'
-                    return(out)
-                  },
+                  smote = function(x, y){themis::smote(data.frame(x, Class = y), 'Class')},
                   rose = function(x, y){ROSE::ROSE(Class ~ ., data = data.frame(cbind(x, Class = y)))$data})
     out <- fun(x = x, y = y)
     y <- out[, 'Class']
