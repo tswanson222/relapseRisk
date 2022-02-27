@@ -25,7 +25,8 @@ ROCcurve(
   roc_lty = 1,
   roc_lwd = 2,
   roc_col = "black",
-  prc = FALSE
+  prc = FALSE,
+  plot_na = FALSE
 )
 }
 \arguments{
@@ -72,6 +73,8 @@ value on the plot.}
 
 \item{prc}{Logical. Determines whether to create a PRC (if \code{TRUE}) or an
 ROC (if \code{FALSE}).}
+
+\item{plot_na}{Logical}
 }
 \value{
 TBD

@@ -199,3 +199,48 @@ ctrl <- function(type = 2, method = 'cv', n = 10, cvreps = 3,
   args$verboseIter <-  isTRUE(verbose)
   do.call(caret::trainControl, args)
 }
+
+
+##### twoclass2: probably only internal
+twoclass2 <- function(data, lev = NULL, model = NULL){
+  if(length(lev) > 2){
+    stop(paste("Your outcome has", length(lev), "levels. The twoClassSummary() function isn't appropriate."))
+  }
+  #caret:::requireNamespaceQuietStop("pROC") # NEW
+  if(!all(levels(data[, "pred"]) == lev)){
+    stop("levels of observed and predicted data do not match")
+  }
+  #suppressMessages(invisible(require('PRROC')))
+  ppreds0 <- data[which(data[, "obs"] == lev[2]), lev[2]]
+  ppreds1 <- data[which(data[, "obs"] == lev[1]), lev[2]]
+  p <- lev[2]; n <- lev[1]
+  pred <- data[, "pred"]; obs <- data[, "obs"]
+  tp <- sum(pred %in% p & obs %in% p)
+  tn <- sum(pred %in% n & obs %in% n)
+  fp <- sum(pred %in% p & obs %in% n)
+  fn <- sum(pred %in% n & obs %in% p)
+  tpr <- tp/(tp + fn)
+  tnr <- tn/(tn + fp)
+  ppv <- tp/(tp + fp)
+  ba <- (tpr + tnr)/2
+  f1 <- 2 * ((ppv * tpr)/(ppv + tpr))
+  acc <- (tp + tn)/(tp + tn + fp + fn)
+  bottom <- (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
+  mcc <- ((tp * tn) - (fp * fn))/sqrt(ifelse(identical(bottom, 0), 1, bottom))
+  if(is.na(mcc)){mcc <- 0}
+  #kappa <- kappa['kappa']
+  #caret:::requireNamespaceQuietStop("e1071") # NEW
+  kappa <- unlist(e1071::classAgreement(table(obs, pred)))[c("diag", "kappa")]['kappa']
+  rocObject <- try(pROC::roc(data$obs, data[, lev[2]], direction = "<",
+                             quiet = TRUE), silent = TRUE)
+  rocAUC <- if(inherits(rocObject, "try-error")){NA} else {rocObject$auc}
+  prc <- ROCcurve(y = data[, 'obs'], model = data[, lev[2]], prc = TRUE)$AUC
+  prAUC <- PRROC::pr.curve(scores.class0 = ppreds0, scores.class1 = ppreds1)[[3]]
+  out <- c(rocAUC, prc, caret::sensitivity(data[, "pred"], data[, "obs"], lev[2]),
+           caret::specificity(data[, "pred"], data[, "obs"], lev[1]),
+           caret::precision(data[, "pred"], data[, "obs"], lev[2]),
+           acc, ba, mcc, kappa, prAUC, f1)
+  names(out) <- c("ROC", "PRC", "Sens", "Spec", "Prec", "Acc",
+                  "BA", "MCC", "Kappoo", "prAUC", "F1")
+  out
+}
