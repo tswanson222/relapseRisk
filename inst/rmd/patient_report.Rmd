@@ -15,19 +15,16 @@ date: "`r params$set_date`"
 ```{r setup, include = FALSE}
 library(relapseRisk)
 participant <- params$participant
+risk <- 'LOW'
 ```
 
-```{r green}
+# Risk Level
+
+<center>
+```{r stoplight, echo = FALSE, out.width = "150px", fig.cap = paste("Risk Level:", risk)}
 knitr::include_graphics(params$stoplights['green'])
 ```
-
-```{r red}
-knitr::include_graphics(params$stoplights['red'])
-```
-
-```{r yellow}
-knitr::include_graphics(params$stoplights['yellow'])
-```
+</center>
 
 # EPSI
 
