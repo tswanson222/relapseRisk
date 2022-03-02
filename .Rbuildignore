@@ -4,3 +4,4 @@
 ^README\.Rmd$
 ^EPSI_thetaAnalysis.html$
 ^fullAnalysis.html$
+^data-raw$

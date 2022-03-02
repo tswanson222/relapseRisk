@@ -26,6 +26,7 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
                      model = 'glint', seed = NULL, time = TRUE, ...){
   t1 <- Sys.time()
   #suppressMessages(invisible(require(caret)))
+  if(!is.null(seed)){set.seed(seed)}
   args0 <- tryCatch({list(...)}, error = function(e){list()})
   if(any(sapply(m, identical, 'all'))){m <- gsub('all', 'zzzall', m)}
   if(identical(m, 'glmnet') | identical(m, 'glint')){model <- m; m <- 'zzzall'}
