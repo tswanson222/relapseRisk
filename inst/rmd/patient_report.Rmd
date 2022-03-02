@@ -7,6 +7,7 @@ params:
   participant: NULL
   set_title: "TITLE"
   set_date: "DATE"
+  stoplights: NULL
 title: "`r params$set_title`"
 date: "`r params$set_date`"
 ---
@@ -16,9 +17,21 @@ library(relapseRisk)
 participant <- params$participant
 ```
 
+```{r green}
+knitr::include_graphics(params$stoplights['green'])
+```
+
+```{r red}
+knitr::include_graphics(params$stoplights['red'])
+```
+
+```{r yellow}
+knitr::include_graphics(params$stoplights['yellow'])
+```
+
 # EPSI
 
-```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE, }
+```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE}
 plotThetas(data = participant, survey = 'epsi')
 ```
 

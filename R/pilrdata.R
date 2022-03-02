@@ -260,10 +260,15 @@ itemTable <- function(data, time = 'last', ...){
 createReport <- function(participant, id = 0, output = './'){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
+  colors <- c('green', 'red', 'yellow')
+  stoplights <- setNames(sapply(paste0(colors, '_stoplight.png'), function(z){
+    system.file('stoplights', z, package = 'relapseRisk')
+  }), colors)
   rmarkdown::render(input = input,
                     output_file = paste0('patient', id, '_', date, '.html'),
                     output_dir = output,
                     params = list(participant = participant,
                                   set_title = paste0('Patient ', id),
-                                  set_date = date))
+                                  set_date = date,
+                                  stoplights = stoplights))
 }
