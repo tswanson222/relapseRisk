@@ -15,8 +15,8 @@ date: "`r params$set_date`"
 ```{r setup, include = FALSE}
 library(relapseRisk)
 participant <- params$participant
-risk <- predictRisk(participant)
-risk <- toupper(risk[nrow(risk), 1])
+risk <- predictRisk(participant, pilr = TRUE)
+risk <- risk[nrow(risk), 'risk']
 ```
 
 # Risk Level

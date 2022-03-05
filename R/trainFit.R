@@ -203,7 +203,7 @@ ctrl <- function(type = 2, method = 'cv', n = 10, cvreps = 3,
 }
 
 
-##### twoclass2: probably only internal
+##### twoclass2: internal
 twoclass2 <- function(data, lev = NULL, model = NULL){
   if(length(lev) > 2){
     stop(paste("Your outcome has", length(lev), "levels. The twoClassSummary() function isn't appropriate."))
@@ -238,10 +238,11 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
   rocAUC <- if(inherits(rocObject, "try-error")){NA} else {rocObject$auc}
   prc <- ROCcurve(y = data[, 'obs'], model = data[, lev[2]], prc = TRUE)
   prAUC <- PRROC::pr.curve(scores.class0 = ppreds0, scores.class1 = ppreds1)[[3]]
+  cutoff <- ifelse(prc$optimal['cutoff'] == -Inf, 0, prc$optimal['cutoff'])
   out <- c(rocAUC, prc$AUC, caret::sensitivity(data[, "pred"], data[, "obs"], lev[2]),
            caret::specificity(data[, "pred"], data[, "obs"], lev[1]),
            caret::precision(data[, "pred"], data[, "obs"], lev[2]),
-           acc, ba, mcc, kappa, prAUC, f1, cutoff = prc$optimal['cutoff'])
+           acc, ba, mcc, kappa, prAUC, f1, cutoff = cutoff)
   names(out) <- c("ROC", "PRC", "Sens", "Spec", "Prec", "Acc",
                   "BA", "MCC", "Kappa", "prAUC", "F1", "cutoff")
   out

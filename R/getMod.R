@@ -93,3 +93,4 @@ coefs <- function(fit, inds = FALSE, gamma = .5){
     return(out)
   }
 }
+

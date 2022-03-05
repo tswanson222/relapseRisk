@@ -4,10 +4,28 @@
 \alias{predictRisk}
 \title{Predict risk of relapse from PiLR data}
 \usage{
-predictRisk(data, ...)
+predictRisk(
+  data,
+  cutoff = "default",
+  coefs = "default",
+  pilr = FALSE,
+  se = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{PiLR survey data file}
+
+\item{cutoff}{Leave as "default" to use trained cutoff values. Or provide a
+single value for a different cutoff}
+
+\item{coefs}{Leave as "default" to use trained coefficient values. Or provide
+a named vector of coefficients.}
+
+\item{pilr}{Logical. Determines whether the input is from PiLR}
+
+\item{se}{Logical. Detemines whether to use the standard error or standard
+deviation of the cutoff values.}
 
 \item{...}{Additional arguments for pilrdata function}
 }
