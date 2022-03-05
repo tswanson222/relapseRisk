@@ -23,14 +23,12 @@
 #'
 #' @examples
 #' 1 + 1
-glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
+glint <- function(x, y = 1, method = 'AIC', m = 'all', type = 'default',
                   gamma = .5, nlam = 50, useSE = TRUE, nfolds = 10,
                   allCoef = FALSE, fit = NULL, lambda = NULL,
                   intOnly = FALSE, lamNum = FALSE, ...){
   if(!missing(x)){if(is(x, 'train')){fit <- x; x <- NULL}}
-  #suppressMessages(invisible(require(glinternet)))
   if(length(method) > 1){fit <- method; method <- 'aic'}
-  #suppressMessages(invisible(require(Matrix)))
   dots <- function(k, ff = NULL, safe = TRUE){
     ff <- deparse(substitute(ff))
     ff <- tryCatch({eval(parse(text = ff))}, error = function(e){list()})
@@ -57,7 +55,7 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
       assign(fobj, fit[[fobj]], pos = -1)
     } else if(is(fit, 'train')){
       if(is.null(lambda)){lambda <- fit$bestTune[, 'lambda']}
-      if(identical(m, 'zzzall')){m <- fit$bestTune[, 'm']}
+      if(identical(m, 'all')){m <- fit$bestTune[, 'm']}
       if(ifelse(!missing(x), is.null(x), TRUE)){
         x <- fit$trainingData[, -ncol(fit$trainingData)]
         y <- fit$trainingData[, ncol(fit$trainingData)]
@@ -112,7 +110,7 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
   if(is.null(colnames(x))){colnames(x) <- paste0('X', 1:ncol(x))}
   if(is.data.frame(x)){x <- as.matrix(x)}
   if(identical(type, 'default')){type <- rep(1, ncol(x))}
-  if(identical(m, 'zzzall') | identical(m, 0) | identical(m, ncol(x) + 1)){m <- 1:ncol(x)}
+  if(identical(m, 'all') | identical(m, 0) | identical(m, ncol(x) + 1)){m <- 1:ncol(x)}
   if(is.character(m)){
     stopifnot(all(m %in% colnames(x)))
     m <- which(colnames(x) %in% m)
@@ -329,14 +327,13 @@ glint <- function(x, y = 1, method = 'AIC', m = 'zzzall', type = 'default',
 
 
 ##### lambdaGrid: Just returns lambda values from glinternet. Global?
-lambdaGrid = function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL, numLevels,
-                      lambdaMinRatio = 0.01, interactionPairs = NULL, screenLimit = NULL,
-                      numToFind = NULL, family = c("gaussian", "binomial"),
-                      tol = 1e-5, maxIter = 5000, verbose = FALSE,
-                      numCores = 1, lamOnly = TRUE){
+lambdaGrid <- function(X, Y, nLambda = 50, m = NULL, trim = FALSE, lambda = NULL, numLevels,
+                       lambdaMinRatio = 0.01, interactionPairs = NULL, screenLimit = NULL,
+                       numToFind = NULL, family = c("gaussian", "binomial"),
+                       tol = 1e-5, maxIter = 5000, verbose = FALSE,
+                       numCores = 1, lamOnly = TRUE){
   # get call and family
   interactionCandidates <- m
-  #suppressMessages(invisible(require(glinternet)))
   if(dim(table(Y)) == 2){
     if(is.factor(Y)){
       levels(Y) <- 0:1

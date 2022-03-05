@@ -9,6 +9,7 @@
 #'
 #' @import stats
 #' @import ggplot2
+#' @import caret
 #' @importFrom methods formalArgs is
 #' @importFrom graphics abline axis lines points
 #' @importFrom utils combn read.csv

@@ -8,7 +8,7 @@ glint(
   x,
   y = 1,
   method = "AIC",
-  m = "zzzall",
+  m = "all",
   type = "default",
   gamma = 0.5,
   nlam = 50,

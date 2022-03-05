@@ -14,7 +14,6 @@
 #' @examples
 #' 1 + 1
 test_roc <- function(fit, x = NULL, y = NULL, v = TRUE, ci = TRUE){
-  #suppressMessages(invisible(library(pROC)))
   if(!isTRUE(ci)){v <- FALSE}
   if(!is.null(x)){if(is.logical(x)){v <- x; x <- NULL}}
   if(!is.null(y)){if(is.logical(y)){v <- y; y <- NULL}}

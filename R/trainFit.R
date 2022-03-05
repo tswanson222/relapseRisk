@@ -21,16 +21,14 @@
 #'
 #' @examples
 #' 1 + 1
-trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
+trainFit <- function(x, y, k = 'default', m = 'all', subsample = 'none',
                      lams = 'default', metric = 'default', pre = NULL, grid = NULL,
                      model = 'glint', seed = NULL, time = TRUE, ...){
   t1 <- Sys.time()
-  #suppressMessages(invisible(require(caret)))
   if(!is.null(seed)){set.seed(seed)}
   args0 <- tryCatch({list(...)}, error = function(e){list()})
-  if(any(sapply(m, identical, 'all'))){m <- gsub('all', 'zzzall', m)}
-  if(identical(m, 'glmnet') | identical(m, 'glint')){model <- m; m <- 'zzzall'}
-  #if(is.character(m)){if(m %in% c('glmnet', 'glint')){model <- m}; m <- 0}
+  #if(any(sapply(m, identical, 'all'))){m <- gsub('all', 'zzzall', m)}
+  if(identical(m, 'glmnet') | identical(m, 'glint')){model <- m; m <- 'all'}
   if(!identical(subsample, 'none') & !'sampling' %in% names(args0)){
     subsample <- match.arg(tolower(subsample), c('down', 'up', 'smote', 'rose'))
     fun <- switch(subsample, down = caret::downSample, up = caret::upSample,
@@ -77,6 +75,8 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
       if(dim(table(y)) == 2){
         mod$obsLevels <- switch(2 - is.factor(y), levels(y), unique(y))
       }
+      yhat <- predict(mod, x, lambda = mod$lambdaOpt, type = 'response')[, 1]
+      mod$cutoff <- ROCcurve(y = y, model = yhat, prc = TRUE)$optimal['cutoff']
       return(mod)
     },
     predict = function(modelFit, newdata, submodels = NULL){
@@ -88,7 +88,8 @@ trainFit <- function(x, y, k = 'default', m = 'zzzall', subsample = 'none',
         predict(modelFit, newdata, lambda = lam)[, 1]
       } else {
         preds <- predict(modelFit, newdata, lambda = lam, type = 'response')[, 1]
-        ifelse(preds < .5, obsLevels[1], obsLevels[2])
+        #cutoff <- .5
+        ifelse(preds < modelFit$cutoff, obsLevels[1], obsLevels[2])
       }
     },
     prob = function(modelFit, newdata, submodels = NULL){
@@ -224,24 +225,24 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
   tnr <- tn/(tn + fp)
   ppv <- tp/(tp + fp)
   ba <- (tpr + tnr)/2
-  f1 <- 2 * ((ppv * tpr)/(ppv + tpr))
+  f1 <- 2 * ((ppv * tpr)/ifelse((ppv + tpr) == 0, 1, (ppv + tpr)))
   acc <- (tp + tn)/(tp + tn + fp + fn)
   bottom <- (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
-  mcc <- ((tp * tn) - (fp * fn))/sqrt(ifelse(identical(bottom, 0), 1, bottom))
-  if(is.na(mcc)){mcc <- 0}
+  mcc <- ((tp * tn) - (fp * fn))/sqrt(ifelse(bottom == 0, 1, bottom))
+  #if(is.na(mcc)){mcc <- 0}
   #kappa <- kappa['kappa']
   #caret:::requireNamespaceQuietStop("e1071") # NEW
   kappa <- unlist(e1071::classAgreement(table(obs, pred)))[c("diag", "kappa")]['kappa']
   rocObject <- try(pROC::roc(data$obs, data[, lev[2]], direction = "<",
                              quiet = TRUE), silent = TRUE)
   rocAUC <- if(inherits(rocObject, "try-error")){NA} else {rocObject$auc}
-  prc <- ROCcurve(y = data[, 'obs'], model = data[, lev[2]], prc = TRUE)$AUC
+  prc <- ROCcurve(y = data[, 'obs'], model = data[, lev[2]], prc = TRUE)
   prAUC <- PRROC::pr.curve(scores.class0 = ppreds0, scores.class1 = ppreds1)[[3]]
-  out <- c(rocAUC, prc, caret::sensitivity(data[, "pred"], data[, "obs"], lev[2]),
+  out <- c(rocAUC, prc$AUC, caret::sensitivity(data[, "pred"], data[, "obs"], lev[2]),
            caret::specificity(data[, "pred"], data[, "obs"], lev[1]),
            caret::precision(data[, "pred"], data[, "obs"], lev[2]),
-           acc, ba, mcc, kappa, prAUC, f1)
+           acc, ba, mcc, kappa, prAUC, f1, cutoff = prc$optimal['cutoff'])
   names(out) <- c("ROC", "PRC", "Sens", "Spec", "Prec", "Acc",
-                  "BA", "MCC", "Kappoo", "prAUC", "F1")
+                  "BA", "MCC", "Kappa", "prAUC", "F1")
   out
 }
