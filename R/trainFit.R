@@ -243,6 +243,6 @@ twoclass2 <- function(data, lev = NULL, model = NULL){
            caret::precision(data[, "pred"], data[, "obs"], lev[2]),
            acc, ba, mcc, kappa, prAUC, f1, cutoff = prc$optimal['cutoff'])
   names(out) <- c("ROC", "PRC", "Sens", "Spec", "Prec", "Acc",
-                  "BA", "MCC", "Kappa", "prAUC", "F1")
+                  "BA", "MCC", "Kappa", "prAUC", "F1", "cutoff")
   out
 }
