@@ -20,7 +20,7 @@ predictRisk <- function(data, cutoff = 'default', coefs = 'default',
   if(identical(cutoff, 'default')){cutoff <- prc_cutoff}
   if(identical(coefs, 'default')){coefs <- final_coefs}
   predFun <- function(dat, coefs, cutoff, se){
-    form <- as.formula(paste0('~', paste0(names(coefs)[-1], collapse = ' + ')))
+    form <- as.formula(paste('~', paste0(names(coefs)[-1], collapse = ' + ')))
     dat <- model.matrix(form, dat)
     b <- (dat %*% coefs)[, 1]
     predprob <- exp(b)/(1 + exp(b))
@@ -36,22 +36,33 @@ predictRisk <- function(data, cutoff = 'default', coefs = 'default',
     out <- data.frame(risk = outcome, predprob = predprob)
     return(out)
   }
-  if(isTRUE(pilr)){
-    data <- lapply(c('epsi', 'idas'), function(z) pilrdata(data, z))
-    data <- do.call(rbind, lapply(data, '[[', 'output'))
+  if(pilr | all(c('survey_code', 'event_type', 'question_code') %in% colnames(data))){
+    data <- lapply(c('epsi', 'idas'), function(z) pilrdata(data, z, ...))
+    nas <- sapply(data, function(z) identical(z, NA))
+    if(all(nas)){
+      out <- data.frame(risk = 'MISSING', predprob = NA, Time = NA)
+      return(out)
+    } else if(any(nas)){
+      data <- data[[-which(nas)]]$output
+    } else {
+      data <- do.call(rbind, lapply(data, '[[', 'output'))
+    }
     epsi <- c('Bulimia', 'Exercise-Focused Behaviors', 'Restrictive Eating')
     idas <- c('Fear', 'Distress', 'Positive Affect')
-    stopifnot(all(c(epsi, idas) %in% data$Thetas))
     data <- split(data, data$Time)
-    for(i in 1:length(data)){
-      data[[i]]$Thetas <- factor(data[[i]]$Thetas, levels = c(epsi, idas),
-                                 labels = c(paste0('EP', 1:3), paste0('I', 1:3)))
-      temp <- structure(data.frame(t(data.frame(data[[i]]$Estimate))), row.names = '1')
-      colnames(temp) <- data[[i]]$Thetas
-      data[[i]] <- predFun(dat = temp, coefs = coefs, cutoff = cutoff, se = se)
+    for(i in names(data)){
+      if(all(c(epsi, idas) %in% data[[i]]$Thetas)){
+        data[[i]]$Thetas <- factor(data[[i]]$Thetas, levels = c(epsi, idas),
+                                   labels = c(paste0('EP', 1:3), paste0('I', 1:3)))
+        temp <- structure(data.frame(t(data.frame(data[[i]]$Estimate))), row.names = '1')
+        colnames(temp) <- data[[i]]$Thetas
+        data[[i]] <- predFun(dat = temp, coefs = coefs, cutoff = cutoff, se = se)
+        data[[i]] <- data.frame(data[[i]], Time = as.numeric(i))
+      } else {
+        data[[i]] <- data.frame(risk = 'MISSING', predprob = NA, Time = as.numeric(i))
+      }
     }
-    out <- do.call(rbind, data)
-    out <- data.frame(out, Time = 1:nrow(out))
+    out <- data.frame(do.call(rbind, data))
   } else {
     out <- predFun(dat = data, coefs = coefs, cutoff = cutoff, se = se)
   }

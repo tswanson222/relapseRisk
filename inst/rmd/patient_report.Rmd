@@ -15,35 +15,59 @@ date: "`r params$set_date`"
 ```{r setup, include = FALSE}
 library(relapseRisk)
 participant <- params$participant
+
 risk <- predictRisk(participant, pilr = TRUE)
 risk <- risk[nrow(risk), 'risk']
+
+epsi <- pilrdata(file = participant, survey = 'epsi')
+idas <- pilrdata(file = participant, survey = 'idas')
 ```
 
 # Risk Level
 
 <center>
 ```{r stoplight, echo = FALSE, out.width = "150px", fig.cap = paste("Risk Level:", risk)}
-light <- ifelse(risk == 'HIGH', 'red', ifelse(risk == 'LOW', 'green', 'yellow'))
-knitr::include_graphics(params$stoplights[light])
+light <- ifelse(risk == 'HIGH', 'red',
+                ifelse(risk == 'LOW', 'green', 
+                       ifelse(risk == 'MODERATE', 'yellow', 'none')))
+
+if(light != 'none'){
+  knitr::include_graphics(params$stoplights[light])
+} else {
+  message('Patient did not complete both surveys this week. Risk score cannot be calculated.')
+}
+
 ```
 </center>
 
 # EPSI
 
 ```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE}
-plotThetas(data = participant, survey = 'epsi')
+if(!identical(epsi, NA)){
+  plotThetas(data = epsi)
+}
 ```
 
 ```{r table1, echo = FALSE}
-itemTable(data = participant, survey = 'epsi')
+if(!identical(epsi, NA)){
+  itemTable(data = epsi)
+} else {
+  message('Patient did not complete the EPSI survey this week.')
+}
 ```
 
 # IDAS
 
 ```{r thetaViz2, echo = FALSE, message = FALSE, warning = FALSE}
-plotThetas(data = participant, survey = 'idas')
+if(!identical(idas, NA)){
+  plotThetas(data = idas)
+}
 ```
 
 ```{r table2, echo = FALSE}
-itemTable(data = participant, survey = 'idas')
+if(!identical(idas, NA)){
+  itemTable(data = idas)
+} else {
+  message('Patient did not complete the IDAS survey this week.')
+}
 ```
