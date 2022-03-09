@@ -26,7 +26,8 @@ ROCcurve(
   roc_lwd = 2,
   roc_col = "black",
   prc = FALSE,
-  plot_na = FALSE
+  plot_na = FALSE,
+  cutoff = ">"
 )
 }
 \arguments{
@@ -75,6 +76,9 @@ value on the plot.}
 ROC (if \code{FALSE}).}
 
 \item{plot_na}{Logical}
+
+\item{cutoff}{Character string. Define how to classify cases relative to the
+predicted probability cutoff}
 }
 \value{
 TBD

@@ -5,7 +5,7 @@ devtools::document()
 
 
 # 2) Load training data
-data <- readRDS('~/../Desktop/LINUX_2022/Documents/CARE/CATapp/CATapp/Files/epsidas_FINAL.RDS')
+data <- readRDS('Z:/Current Studies/STAR Grant/Data/TrainingData/trainingData_2022-March-9.RDS')
 x <- data[, -1]
 y <- data$y
 
