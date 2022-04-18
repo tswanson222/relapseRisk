@@ -38,7 +38,7 @@ predictRisk <- function(data, cutoff = 'default', coefs = 'default',
   }
   if(pilr | all(c('survey_code', 'event_type', 'question_code') %in% colnames(data))){
     data <- lapply(c('epsi', 'idas'), function(z) pilrdata(data, z, ...))
-    nas <- sapply(data, function(z) identical(z, NA))
+    nas <- c(data[[1]]$non_response,data[[2]]$non_response)
     if(all(nas)){
       out <- data.frame(risk = 'MISSING', predprob = NA, Time = NA)
       return(out)
