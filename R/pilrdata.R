@@ -165,7 +165,8 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
       } else {
         levels(output$Thetas) <- c('Fear', 'Distress', 'Positive Affect')
       }
-      x2 <- list(output = output, responses = responses)
+      x2 <- list(output = output, responses = responses,
+                non_response =ifelse(max(survey_weeks)==Weeks,FALSE,TRUE))
     } else {
       x2 <- NA
     }
