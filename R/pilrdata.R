@@ -31,6 +31,10 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
   survey <- match.arg(survey)
   qoptions <- epsi_idas_questions[[which(endsWith(names(epsi_idas_questions), survey))]]
   x <- switch(2 - is.character(file), read.csv(file, stringsAsFactors = FALSE), file)
+##### extract max time points
+  Weeks_extraction <- unique(x$survey_code)[stringr::str_detect(unique(x$survey_code),'EPSI|IDAS')]
+  Weeks <- max(as.integer(stringr::str_extract(Weeks_extraction, "\\d+")))
+  
   type <- match.arg(tolower(type), c('cat', 'demographics', 'weekly'))
   if(type == 'cat'){
     if('68158' %in% x$survey_code){
@@ -67,6 +71,9 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
           }
         }
       }
+      
+      ### Get time points
+      survey_weeks <- as.integer(stringr::str_extract(k, "\\d+"))
 
       ### Get SEs
       ses <- x2[x2$question_code == 'SE_thetas', 'response_values']
@@ -107,7 +114,17 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
           Items = qoptions[items],
           Responses = factor(values, levels = resopts[which(resopts %in% values)])
         )
-      } else if(is.numeric(questions)){
+      }
+      else if(identical(questions,"current")){
+        values <- values[[Weeks]]
+        for(i in 0:4){values[values == i] <- resopts[i + 1]}
+        items <- items[[length(items)]]
+        responses <- cbind.data.frame(
+          Items = qoptions[items],
+          Responses = factor(values, levels = resopts[which(resopts %in% values)])
+        )       
+      }
+      else if(is.numeric(questions)){
         responses <- setNames(vector('list', length(questions)), paste0('time', questions))
         for(i in seq_along(questions)){
           values0 <- values[[questions[i]]]
@@ -121,15 +138,25 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
         if(length(responses) == 1){responses <- responses[[1]]}
       }
 
-      if(length(sessions) == 1){
+      if(Weeks == 1){
         output <- data.frame(Estimate = thetas, SE = ses,
                              Thetas = factor(paste0('theta', 1:3)),
                              Time = rep(1, 3), Date = theta_dates)
       } else {
-        time <- rep(1:length(sessions), 3)
-        labs <- rep(paste0('theta', 1:3), each = length(sessions))
-        thetas <- c(thetas[, 1], thetas[, 2], thetas[, 3])
-        ses <- c(ses[, 1], ses[, 2], ses[, 3])
+        time <- rep(1:Weeks, 3)
+        labs <- rep(paste0('theta', 1:3), each = Weeks)
+        thetas <- matrix(thetas,ncol=3)
+        ses <- matrix(ses,ncol=3)
+        thetas_new <- array(NA,dim=c(Weeks,3))
+        ses_new <- array(NA,dim=c(Weeks,3))
+        
+        for(i in 1:length(survey_weeks)){
+          thetas_new[survey_weeks[i],] <- thetas[i,]
+          ses_new[survey_weeks[i],] <- ses[i,]
+        }
+        
+        thetas <- c(thetas_new[, 1], thetas_new[, 2], thetas_new[, 3])
+        ses <- c(ses_new[, 1], ses_new[, 2], ses_new[, 3])
         output <- data.frame(Estimate = thetas, SE = ses, Thetas = factor(labs),
                              Time = time, Date = rep(theta_dates, each = 3))
       }
@@ -243,19 +270,21 @@ itemTable <- function(data, time = 'last', ...){
     if(time == 'last' | !is(time, 'numeric')){time <- length(data)}
     data <- data[[time]]
   }
-  resopts_epsi <- c('Never', 'Rarely', 'Sometimes', 'Often', 'Very Often')
-  resopts_idas <- c('Not at all', 'A little bit', 'Moderately', 'Quite a bit', 'Extremely')
-  resopts <- switch(2 - any(resopts_epsi %in% data$Responses), resopts_epsi, resopts_idas)
-  colors <- c('#006D2C', '#41AB5D', '#FDAE61', '#E31A1C', '#800026')
-  data <- data[order(data$Responses), ]
-  rownames(data) <- 1:nrow(data)
-  data <- within(data, {
-    Responses <- kableExtra::cell_spec(Responses, color = 'white', bold = TRUE,
+  if(dim(data)[1]!=0){
+    resopts_epsi <- c('Never', 'Rarely', 'Sometimes', 'Often', 'Very Often')
+    resopts_idas <- c('Not at all', 'A little bit', 'Moderately', 'Quite a bit', 'Extremely')
+    resopts <- switch(2 - any(resopts_epsi %in% data$Responses), resopts_epsi, resopts_idas)
+    colors <- c('#006D2C', '#41AB5D', '#FDAE61', '#E31A1C', '#800026')
+    data <- data[order(data$Responses), ]
+    rownames(data) <- 1:nrow(data)
+    data <- within(data, {
+      Responses <- kableExtra::cell_spec(Responses, color = 'white', bold = TRUE,
                                        background = factor(Responses, resopts, colors))
-  })
-  out <- kableExtra::kable_styling(kableExtra::kable(data, escape = FALSE),
+    })
+    out <- kableExtra::kable_styling(kableExtra::kable(data, escape = FALSE),
                                    bootstrap_options = c('striped', 'hover', 'responsive'))
-  return(out)
+    return(out)
+  }
 }
 
 
