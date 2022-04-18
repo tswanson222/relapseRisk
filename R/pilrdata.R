@@ -43,7 +43,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
     k <- switch(type, demographics = 'cat_demographic_survey',
                 weekly = 'weekly_behaviors')
   }
-  x2 <- subset(x, survey_code == k & event_type == 'response' & question_type != 'instruction')
+  x2 <- subset(x, survey_code %in% k & event_type == 'response' & question_type != 'instruction')
   x2$date <- as.Date(x2[, grep('^metadata.*.timestamp$', colnames(x))])
   if(!is.null(day)){x2 <- subset(x2, date == day)}
   if(isTRUE(process) & type == 'cat'){
