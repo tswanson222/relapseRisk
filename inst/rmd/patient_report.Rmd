@@ -52,11 +52,11 @@ if(length(epsi)>1){
 if(length(epsi)>1 & epsi$non_response==FALSE){
   itemTable(data = epsi)
 } 
-else if(length(epsi)>1 & epsi$non_response==TRUE){
+if(length(epsi)>1 & epsi$non_response==TRUE){
    message('Patient did not complete the EPSI survey this week. Display results from the last completed survey.')
    itemTable(data = epsi) 
 }
-else {
+if(length(epsi)<=1){
   message('Patient did not complete the EPSI survey this week and there are no previous records.')
 }
 ```
@@ -73,11 +73,11 @@ if(length(idas)>1){
 if(length(idas)>1 & idas$non_response==FALSE){
   itemTable(data = idas)
 } 
-else if(length(idas)>1 & idas$non_response==TRUE){
+if(length(idas)>1 & idas$non_response==TRUE){
    message('Patient did not complete the IDAS survey this week. Display results from the last completed survey.')
    itemTable(data = idas) 
 }
-else {
+if(length(idas)<=1){
   message('Patient did not complete the IDAS survey this week and there are no previous records.')
 }
 ```
