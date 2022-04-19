@@ -51,7 +51,7 @@ predictRisk <- function(data, cutoff = 'default', coefs = 'default',
     idas <- c('Fear', 'Distress', 'Positive Affect')
     data <- split(data, data$Time)
     for(i in names(data)){
-      if(all(c(epsi, idas) %in% data[[i]]$Thetas)){
+      if(all(!is.na(data[[i]]$Estimate))){
         data[[i]]$Thetas <- factor(data[[i]]$Thetas, levels = c(epsi, idas),
                                    labels = c(paste0('EP', 1:3), paste0('I', 1:3)))
         temp <- structure(data.frame(t(data.frame(data[[i]]$Estimate))), row.names = '1')
