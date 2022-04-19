@@ -32,7 +32,7 @@ light <- ifelse(risk == 'HIGH', 'red',
                        ifelse(risk == 'MODERATE', 'yellow', 'none')))
 
 if(light != 'none'){
-  knitr::include_graphics(params$stoplights[light])
+  suppressWarnings(knitr::include_graphics(params$stoplights[light]))
 } else {
   message('Patient did not complete both surveys this week. Risk score cannot be calculated.')
 }
