@@ -28,4 +28,4 @@ zscore2 <- compute_zscore(data,2)
 # 4) save as internal data
 
 usethis::use_data(quantile90,quantile95,zscore1,zscore1.5,zscore2,
-                  internal = TRUE, overwrite = TRUE)
+                  internal = TRUE, overwrite = FALSE)
