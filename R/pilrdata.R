@@ -236,7 +236,7 @@ plotThetas <- function(data, colors = FALSE, zeroLine = TRUE, pointSize = 3, ...
     }
     if(rects > 0){
       g1 <- g1 + geom_rect(mapping = aes(xmin = 1, xmax = max(thetas[, 'Time']), 
-                                         ymin = zscore1.5[(3*which_survey-2):(3*which_survey)], 
+                                         ymin = zscore1.5, 
                                          ymax = Inf), alpha = .025, fill = 'red')
       if(rects > 1){
         g1 <- g1 + geom_rect(mapping = aes(xmin = 1, xmax = max(thetas[, 'Time']), ymin = -2, ymax = 1.5), alpha = .025, fill = 'green')
