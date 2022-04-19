@@ -39,12 +39,10 @@ predictRisk <- function(data, cutoff = 'default', coefs = 'default',
   if(pilr | all(c('survey_code', 'event_type', 'question_code') %in% colnames(data))){
     data <- lapply(c('epsi', 'idas'), function(z) pilrdata(data, z, ...))
     nas <- c(data[[1]]$non_response,data[[2]]$non_response)
-    if(all(nas)){
+    if(any(nas)){
       out <- data.frame(risk = 'MISSING', predprob = NA, Time = NA)
       return(out)
-    } else if(any(nas)){
-      data <- data[[-which(nas)]]$output
-    } else {
+    }else {
       data <- do.call(rbind, lapply(data, '[[', 'output'))
     }
     epsi <- c('Bulimia', 'Exercise-Focused Behaviors', 'Restrictive Eating')
