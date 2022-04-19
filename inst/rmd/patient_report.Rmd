@@ -43,31 +43,41 @@ if(light != 'none'){
 # EPSI
 
 ```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE}
-if(!identical(epsi, NA)){
+if(length(epsi)>1){
   plotThetas(data = epsi)
 }
 ```
 
 ```{r table1, echo = FALSE}
-if(!identical(epsi, NA)){
+if(length(epsi)>1 & epsi$non_response==FALSE){
   itemTable(data = epsi)
-} else {
-  message('Patient did not complete the EPSI survey this week.')
+} 
+else if(length(epsi)>1 & epsi$non_response==TRUE){
+   message('Patient did not complete the EPSI survey this week. Display results from the last completed survey.')
+   itemTable(data = epsi) 
+}
+else {
+  message('Patient did not complete the EPSI survey this week and there are no previous records.')
 }
 ```
 
 # IDAS
 
 ```{r thetaViz2, echo = FALSE, message = FALSE, warning = FALSE}
-if(!identical(idas, NA)){
+if(length(idas)>1){
   plotThetas(data = idas)
 }
 ```
 
 ```{r table2, echo = FALSE}
-if(!identical(idas, NA)){
+if(length(idas)>1 & idas$non_response==FALSE){
   itemTable(data = idas)
-} else {
-  message('Patient did not complete the IDAS survey this week.')
+} 
+else if(length(idas)>1 & idas$non_response==TRUE){
+   message('Patient did not complete the IDAS survey this week. Display results from the last completed survey.')
+   itemTable(data = idas) 
+}
+else {
+  message('Patient did not complete the IDAS survey this week and there are no previous records.')
 }
 ```
