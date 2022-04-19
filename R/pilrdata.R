@@ -140,28 +140,26 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
         if(length(responses) == 1){responses <- responses[[1]]}
       }
 
-      if(Weeks == 1){
-        output <- data.frame(Estimate = thetas, SE = ses,
-                             Thetas = factor(paste0('theta', 1:3)),
-                             Time = rep(1, 3), Date = theta_dates)
-      } else {
         time <- rep(1:Weeks, 3)
         labs <- rep(paste0('theta', 1:3), each = Weeks)
         thetas <- matrix(thetas,ncol=3)
         ses <- matrix(ses,ncol=3)
         thetas_new <- array(NA,dim=c(Weeks,3))
         ses_new <- array(NA,dim=c(Weeks,3))
+        theta_dates_new <- as.Date(rep(NA,Weeks))
         
         for(i in 1:length(survey_weeks)){
           thetas_new[survey_weeks[i],] <- thetas[i,]
           ses_new[survey_weeks[i],] <- ses[i,]
+          theta_dates_new[survey_weeks[i]] <- as.Date(theta_dates[i])
         }
         
         thetas <- c(thetas_new[, 1], thetas_new[, 2], thetas_new[, 3])
         ses <- c(ses_new[, 1], ses_new[, 2], ses_new[, 3])
+        theta_dates <- theta_dates_new
         output <- data.frame(Estimate = thetas, SE = ses, Thetas = factor(labs),
                              Time = time, Date = rep(theta_dates, each = 3))
-      }
+      
       if(survey == 'epsi'){
         levels(output$Thetas) <- c('Bulimia', 'Exercise-Focused Behaviors', 'Restrictive Eating')
       } else {
