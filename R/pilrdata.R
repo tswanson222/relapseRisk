@@ -193,7 +193,19 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
                  non_response =ifelse(max(survey_weeks)==Weeks,FALSE,TRUE),
                  tech_inter=tech_inter)
     }   else {
+      thetas <- rep(NA,Weeks*3)
+      ses <- rep(NA,Weeks*3)
+      time <- rep(1:Weeks, 3)
+      labs <- rep(paste0('theta', 1:3), each = Weeks)
+      output <- data.frame(Estimate = thetas, SE = ses, Thetas = factor(labs),
+                           Time = time, Date = rep(time_start,Weeks*3))
+      if(survey == 'epsi'){
+        levels(output$Thetas) <- c('Bulimia', 'Exercise-Focused Behaviors', 'Restrictive Eating')
+      } else {
+        levels(output$Thetas) <- c('Fear', 'Distress', 'Positive Affect')
+      }
       x2 <- list()
+      x2$output <- output
       x2$non_response <- TRUE
       x2$tech_inter <- FALSE
     }
