@@ -54,7 +54,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
   x <- switch(2 - is.character(file), read.csv(file, stringsAsFactors = FALSE), file)
 ##### extract max time points
   Weeks_extraction <- unique(x$survey_code)[stringr::str_detect(unique(x$survey_code),'EPSI|IDAS')]
-  Weeks <- max(as.integer(stringr::str_extract(Weeks_extraction, "\\d+")))
+  Weeks <- max(as.integer(Weeks),max(as.integer(stringr::str_extract(Weeks_extraction, "\\d+"))))
   
   type <- match.arg(tolower(type), c('cat', 'demographics', 'weekly'))
   if(type == 'cat'){
@@ -186,11 +186,15 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
       } else {
         levels(output$Thetas) <- c('Fear', 'Distress', 'Positive Affect')
       }
+      tech_inter <- ifelse(max(survey_weeks)<Weeks & 
+                             Weeks %in% as.integer(stringr::str_extract(k_all, "\\d+")),TRUE,FALSE)  
       x2 <- list(output = output, responses = responses,
-                non_response =ifelse(max(survey_weeks)==Weeks,FALSE,TRUE))
+                 non_response =ifelse(max(survey_weeks)==Weeks,FALSE,TRUE),
+                 tech_inter=tech_inter)
     }   else {
       x2 <- list()
       x2$non_response <- TRUE
+      x2$tech_inter <- FALSE
     }
   }
   return(x2)
