@@ -21,6 +21,9 @@ risk <- risk[nrow(risk), 'risk']
 
 epsi <- pilrdata(file = participant, survey = 'epsi')
 idas <- pilrdata(file = participant, survey = 'idas')
+
+response_condition <- ifelse(epsi$non_response & idas$non_response, ifelse(epsi$tech_inter | idas$tech_inter,2,1),
+                             ifelse(epsi$non_response | idas$non_response,3,4))
 ```
 
 # Risk Level
@@ -33,7 +36,17 @@ light <- ifelse(risk == 'HIGH', 'red',
 
 if(light != 'none'){
   suppressWarnings(knitr::include_graphics(params$stoplights[light]))
-} else {
+}
+         
+if(response_condition==1) {
+   message("Patient did not complete either survey this week.\n It may be helpful to encourage patient to be more responsive.")      
+}
+if(response_condition==2) {
+   message('Patient response was interrupted this week. Risk score cannot be calculated.
+            \n It may be helpful to encourage patient to check network connections before each survey,
+            \n and submit or exist only after completing each survey.')
+}
+if(response_condition==3) {
   message('Patient did not complete both surveys this week. Risk score cannot be calculated.')
 }
 
