@@ -68,6 +68,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
     k <- switch(type, demographics = 'cat_demographic_survey',
                 weekly = 'weekly_behaviors')
   }
+  k_all <- k
   x2 <- subset(x, survey_code %in% k & event_type == 'response' & question_type != 'instruction')
   k <- x2[x2$question_code == 'thetas', "survey_code"]
   x2 <- subset(x, survey_code %in% k & event_type == 'response' & question_type != 'instruction')
