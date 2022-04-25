@@ -48,6 +48,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
     return(x2)
   }
   
+ else{
   survey <- match.arg(survey)
   qoptions <- epsi_idas_questions[[which(endsWith(names(epsi_idas_questions), survey))]]
   x <- switch(2 - is.character(file), read.csv(file, stringsAsFactors = FALSE), file)
@@ -192,7 +193,8 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
       x2$non_response <- TRUE
     }
   }
-  x2
+  return(x2)
+ }
 }
 
 
