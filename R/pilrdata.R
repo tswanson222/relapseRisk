@@ -26,8 +26,28 @@
 #' @examples
 #' 1 + 1
 pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
-                     type = 'cat', process = TRUE, questions = 'last'){
-  stopifnot(!is.null(file))
+                     type = 'cat', process = TRUE, questions = 'last',
+                     time_start = "2022-04-01"){
+  time_now <- lubridate::today()
+  Weeks <- floor(difftime(time_now,time_start,units="weeks"))
+  if(is.null(file)){
+    thetas <- rep(NA,Weeks*3)
+    ses <- rep(NA,Weeks*3)
+    time <- rep(1:Weeks, 3)
+    labs <- rep(paste0('theta', 1:3), each = Weeks)
+    output <- data.frame(Estimate = thetas, SE = ses, Thetas = factor(labs),
+                         Time = time, Date = rep(time_start,Weeks*3))
+    if(survey == 'epsi'){
+      levels(output$Thetas) <- c('Bulimia', 'Exercise-Focused Behaviors', 'Restrictive Eating')
+    } else {
+      levels(output$Thetas) <- c('Fear', 'Distress', 'Positive Affect')
+    }
+    x2 <- list(output = output, 
+               non_response =TRUE,
+               tech_inter=FALSE)
+    return(x2)
+  }
+  
   survey <- match.arg(survey)
   qoptions <- epsi_idas_questions[[which(endsWith(names(epsi_idas_questions), survey))]]
   x <- switch(2 - is.character(file), read.csv(file, stringsAsFactors = FALSE), file)
