@@ -27,7 +27,7 @@
 #' 1 + 1
 pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
                      type = 'cat', process = TRUE, questions = 'last',
-                     time_start = "2022-04-01"){
+                     time_start = "2022-04-20"){
   time_now <- lubridate::today()
   Weeks <- floor(difftime(time_now,time_start,units="weeks"))
   if(is.null(file)){
@@ -321,7 +321,7 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, id = 0, output = './',time_start = "2022-04-01"){
+createReport <- function(participant, id = 0, output = './'){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
