@@ -56,20 +56,20 @@ if(response_condition==3) {
 # EPSI
 
 ```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE}
-if(length(epsi)>1){
+if(length(epsi)>2){
   plotThetas(data = epsi)
 }
 ```
 
 ```{r table1, echo = FALSE}
-if(length(epsi)>1 & epsi$non_response==FALSE){
+if(length(epsi)>2 & epsi$non_response==FALSE){
   itemTable(data = epsi)
 } 
-if(length(epsi)>1 & epsi$non_response==TRUE){
+if(length(epsi)>2 & epsi$non_response==TRUE){
    message('Patient did not complete the EPSI survey this week. Display results from the last completed survey.')
    itemTable(data = epsi) 
 }
-if(length(epsi)<=1){
+if(length(epsi)<=2){
   message('Patient did not complete the EPSI survey this week and there are no previous records.')
 }
 ```
@@ -77,20 +77,20 @@ if(length(epsi)<=1){
 # IDAS
 
 ```{r thetaViz2, echo = FALSE, message = FALSE, warning = FALSE}
-if(length(idas)>1){
+if(length(idas)>2){
   plotThetas(data = idas)
 }
 ```
 
 ```{r table2, echo = FALSE}
-if(length(idas)>1 & idas$non_response==FALSE){
+if(length(idas)>2 & idas$non_response==FALSE){
   itemTable(data = idas)
 } 
-if(length(idas)>1 & idas$non_response==TRUE){
+if(length(idas)>2 & idas$non_response==TRUE){
    message('Patient did not complete the IDAS survey this week. Display results from the last completed survey.')
    itemTable(data = idas) 
 }
-if(length(idas)<=1){
+if(length(idas)<=2){
   message('Patient did not complete the IDAS survey this week and there are no previous records.')
 }
 ```
