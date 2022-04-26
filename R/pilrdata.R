@@ -321,7 +321,7 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, id = 0, output = './'){
+createReport <- function(participant, id = 0, output = './',time_start = "2022-04-01"){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
