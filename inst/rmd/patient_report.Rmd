@@ -42,9 +42,7 @@ if(response_condition==1) {
    message("Patient did not complete either survey this week.\n It may be helpful to encourage patient to be more responsive.")      
 }
 if(response_condition==2) {
-   message('Patient response was interrupted this week. Risk score cannot be calculated.
-            It may be helpful to encourage patient to check network connections before each survey,
-            and avoid existing each survey before submission.')
+   message('Patient response was interrupted this week. Risk score cannot be calculated.\n It may be helpful to encourage patient to check network connections before each survey,\n and avoid existing each survey before submission.')
 }
 if(response_condition==3) {
   message('Patient did not complete both surveys this week. Risk score cannot be calculated.')
