@@ -303,7 +303,7 @@ plotThetas <- function(data, colors = FALSE, zeroLine = TRUE, pointSize = 3, ...
 #'
 #' @examples
 #' 1 + 1
-itemTable <- function(data, time = 'last', ...){
+itemTable <- function(data, ...){
   if(ifelse(is(data, 'data.frame'), 'survey_code' %in% colnames(data), is.character(data))){
     data <- pilrdata(data, ...)$responses
   }
@@ -311,23 +311,22 @@ itemTable <- function(data, time = 'last', ...){
     data <- data$responses
   }
   if(is(data, 'list')){
-    if(time == 'last' | !is(time, 'numeric')){time <- length(data)}
-    data <- data[[time]]
+    data <- data$responses
   }
-  if(dim(data)[1]!=0){
-    resopts_epsi <- c('Never', 'Rarely', 'Sometimes', 'Often', 'Very Often')
-    resopts_idas <- c('Not at all', 'A little bit', 'Moderately', 'Quite a bit', 'Extremely')
-    resopts <- switch(2 - any(resopts_epsi %in% data$Responses), resopts_epsi, resopts_idas)
-    colors <- c('#006D2C', '#41AB5D', '#FDAE61', '#E31A1C', '#800026')
-    data <- data[order(data$Responses), ]
-    rownames(data) <- 1:nrow(data)
-    data <- within(data, {
-      Responses <- kableExtra::cell_spec(Responses, color = 'white', bold = TRUE,
+  if(!is.null(data)){
+  resopts_epsi <- c('Never', 'Rarely', 'Sometimes', 'Often', 'Very Often')
+  resopts_idas <- c('Not at all', 'A little bit', 'Moderately', 'Quite a bit', 'Extremely')
+  resopts <- switch(2 - any(resopts_epsi %in% data$Responses), resopts_epsi, resopts_idas)
+  colors <- c('#006D2C', '#41AB5D', '#FDAE61', '#E31A1C', '#800026')
+  data <- data[order(data$Responses), ]
+  rownames(data) <- 1:nrow(data)
+  data <- within(data, {
+    Responses <- kableExtra::cell_spec(Responses, color = 'white', bold = TRUE,
                                        background = factor(Responses, resopts, colors))
-    })
-    out <- kableExtra::kable_styling(kableExtra::kable(data, escape = FALSE),
+  })
+  out <- kableExtra::kable_styling(kableExtra::kable(data, escape = FALSE),
                                    bootstrap_options = c('striped', 'hover', 'responsive'))
-    return(out)
+  return(out)
   }
 }
 
