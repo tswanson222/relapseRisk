@@ -16,11 +16,13 @@ date: "`r params$set_date`"
 library(relapseRisk)
 participant <- params$participant
 
+time_start <- params$time_start
+
 risk <- predictRisk(participant, pilr = TRUE)
 risk <- risk[nrow(risk), 'risk']
 
-epsi <- pilrdata(file = participant, survey = 'epsi')
-idas <- pilrdata(file = participant, survey = 'idas')
+epsi <- pilrdata(file = participant, survey = 'epsi',time_start=time_start)
+idas <- pilrdata(file = participant, survey = 'idas',time_start=time_start)
 
 response_condition <- ifelse(epsi$non_response & idas$non_response, ifelse(epsi$tech_inter | idas$tech_inter,2,1),
                              ifelse(epsi$non_response | idas$non_response,3,4))
