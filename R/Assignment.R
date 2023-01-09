@@ -8,7 +8,42 @@
 # column headers: participant_id, epoch_code, config_code
 
 
-BESTU_assignment <- function(){
+# file should be the full data file from PiLR
+
+BESTU_assignment <- function(file = NULL){
+  
+  data <- read.csv(file)
+    
+  # reference csv
+  refer <- read.csv("STAR_therapist_startdate.csv")
+  
+  # check if all participants are in the reference csv
+  participants <- unique(data$metadata..pt)
+  
+  # three types: participants in both; participants in file only; participants in log only
+  
+  p_both <- intersect(participants, refer$ID)
+  p_file_only <- participants[!(participants %in% refer$ID)]
+  p_ref_only <- refer$ID[!(refer$ID %in% participants)]
+  
+  # Warning messages
+  
+  if(length(p_file_only)>0){
+    warning("Update the log! Some participants are not logged.")
+  }
+  
+  dir.create(paste0(getwd(),"/",Sys.Date()))
+ 
+  #####################################################
+  # create files for p_both
+  
+  # remove all test subjects
+  
+  ref <- subset(refer,(ID %in% p_both) & therapist != "TEST")
+  p_both <- ref$ID
+  
+  for(i in 1:length(p_both)){
+  }
   
 }
 
