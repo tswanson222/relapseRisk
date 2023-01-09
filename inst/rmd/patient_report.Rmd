@@ -1,8 +1,6 @@
 ---
 output:
-  html_document:
-    toc: true
-    toc_float: true
+  html_document
 params: 
   participant: NULL
   set_title: "TITLE"
