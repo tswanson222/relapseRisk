@@ -334,7 +334,7 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './')
                     output_file = paste0(therapist, '_', epoch, '_', id, '.html'),
                     output_dir = output,
                     params = list(participant = participant,
-                                  set_title = paste0('Patient ', id),
+                                  set_title = paste0(therapist, '_', epoch, '_', id),
                                   set_date = date,
                                   stoplights = stoplights))
 }
