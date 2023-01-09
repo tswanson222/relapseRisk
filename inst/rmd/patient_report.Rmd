@@ -53,8 +53,8 @@ if(response_condition==3) {
 
 # EPSI
 
-```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE}
 \newpage
+```{r thetaViz1, echo = FALSE, message = FALSE, warning = FALSE}
 if(length(epsi)>2){
   plotThetas(data = epsi)
 }
@@ -75,6 +75,7 @@ if(length(epsi)<=2){
 
 # IDAS
 
+\newpage
 ```{r thetaViz2, echo = FALSE, message = FALSE, warning = FALSE}
 if(length(idas)>2){
   plotThetas(data = idas)
