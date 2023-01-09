@@ -323,7 +323,7 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, id = 0, output = './'){
+createReport <- function(participant, therapist=0, epoch=0, id=0, output = './'){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
@@ -331,7 +331,7 @@ createReport <- function(participant, id = 0, output = './'){
     system.file('stoplights', z, package = 'relapseRisk')
   }), colors)
   rmarkdown::render(input = input,
-                    output_file = paste0('patient', id, '_', date, '.html'),
+                    output_file = paste0(therapist, '_', epoch, '_', id, '.html'),
                     output_dir = output,
                     params = list(participant = participant,
                                   set_title = paste0('Patient ', id),
