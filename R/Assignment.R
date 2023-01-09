@@ -43,6 +43,17 @@ STAR_assignment <- function(file = NULL){
   p_both <- ref$ID
   
   for(i in 1:length(p_both)){
+    sub <- subset(data,metadata..pt==ref$ID[i])
+    
+    # obtain current week
+    epoch <- floor(difftime(Sys.Date(),as.Date(ref$startdate[i]),units="weeks")
+    
+    write.csv(sub,file=paste0(ref$therapist[i],"_",epoch,"_",ref$ID[i],".csv"))
+
+    # create report
+
+    createReport(paste0(getwd(),ref$therapist[i],"_",epoch,"_",ref$ID[i],".csv"),
+             therapist=ref$therapist[i],epoch=epoch,id=ref$ID[i])
   }
   
 }
