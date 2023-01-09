@@ -10,7 +10,7 @@
 
 # file should be the full data file from PiLR
 
-BESTU_assignment <- function(file = NULL){
+STAR_assignment <- function(file = NULL){
   
   data <- read.csv(file)
     
