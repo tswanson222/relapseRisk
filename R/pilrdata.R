@@ -396,7 +396,7 @@ starAssignment <- function(file = NULL){
     # create report
 
     createReport(sub,
-             therapist=ref$therapist[i],epoch=epoch,id=ref$ID[i])
+             therapist=ref$therapist[i],epoch=epoch,id=ref$ID[i],...)
   }
   
 }
