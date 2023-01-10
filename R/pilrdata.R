@@ -323,8 +323,8 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, therapist=0, epoch=0, id=0, output = './', date=Sys.Date()){
-
+createReport <- function(participant, therapist=0, epoch=0, id=0, output = './', enddate=as.Date("2027-01-01")){
+  date <- min(enddate,Sys.Date())
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
   stoplights <- setNames(sapply(paste0(colors, '_stoplight.png'), function(z){
