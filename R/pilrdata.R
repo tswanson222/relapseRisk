@@ -355,7 +355,7 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './')
 
 # file should be the full data file from PiLR
 
-STAR_assignment <- function(file = NULL){
+starAssignment <- function(file = NULL){
   
   data <- read.csv(file)
     
