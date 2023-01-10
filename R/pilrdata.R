@@ -392,12 +392,10 @@ starAssignment <- function(file = NULL){
     
     # obtain current week
     epoch <- floor(difftime(Sys.Date(),as.Date(ref$startdate[i]),units="weeks")
-    
-    write.csv(sub,file=paste0(ref$therapist[i],"_",epoch,"_",ref$ID[i],".csv"))
 
     # create report
 
-    createReport(paste0(getwd(),ref$therapist[i],"_",epoch,"_",ref$ID[i],".csv"),
+    createReport(sub,
              therapist=ref$therapist[i],epoch=epoch,id=ref$ID[i])
   }
   
