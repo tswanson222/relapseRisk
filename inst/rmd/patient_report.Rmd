@@ -15,9 +15,7 @@ date: "`r params$set_date`"
 library(relapseRisk)
 participant <- params$participant
 
-risk <- predictRisk(participant, pilr = TRUE)
-
-message(risk)    
+risk <- predictRisk(participant, pilr = TRUE, time_start=params$time_start)
 risk <- risk[nrow(risk), 'risk']
 
 epsi <- pilrdata(file = participant, survey = 'epsi', time_start=params$time_start)
