@@ -323,7 +323,7 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, therapist=0, epoch=0, id=0, output = './'){
+createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',time_start = "2023-01-01"){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
@@ -336,7 +336,8 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './')
                     params = list(participant = participant,
                                   set_title = paste0('Patient ', id),
                                   set_date = date,
-                                  stoplights = stoplights))
+                                  stoplights = stoplights,
+                                  time_start=time_start))
 }
 
 
