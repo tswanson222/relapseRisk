@@ -16,6 +16,8 @@ library(relapseRisk)
 participant <- params$participant
 
 risk <- predictRisk(participant, pilr = TRUE)
+
+message(risk)    
 risk <- risk[nrow(risk), 'risk']
 
 epsi <- pilrdata(file = participant, survey = 'epsi', time_start=params$time_start)
