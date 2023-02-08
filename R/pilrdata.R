@@ -27,7 +27,7 @@
 #' 1 + 1
 pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
                      type = 'cat', process = TRUE, questions = 'last',
-                     time_start = "2022-04-20"){
+                     time_start = "2023-01-01"){
   time_now <- lubridate::today()
   Weeks <- floor(difftime(time_now,time_start,units="weeks"))
   if(is.null(file)){
