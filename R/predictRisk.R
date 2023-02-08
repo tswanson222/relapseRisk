@@ -16,7 +16,7 @@
 #' @examples
 #' 1 + 1
 predictRisk <- function(data, cutoff = 'default', coefs = 'default',
-                        pilr = FALSE, se = FALSE, ...){
+                        pilr = FALSE, se = FALSE, time_start = "2023-01-01", ...){
   if(identical(cutoff, 'default')){cutoff <- prc_cutoff}
   if(identical(coefs, 'default')){coefs <- final_coefs}
   predFun <- function(dat, coefs, cutoff, se){
@@ -37,7 +37,9 @@ predictRisk <- function(data, cutoff = 'default', coefs = 'default',
     return(out)
   }
   if(pilr | all(c('survey_code', 'event_type', 'question_code') %in% colnames(data))){
-    data <- lapply(c('epsi', 'idas'), function(z) pilrdata(data, z, ...))
+    data1 <- pilrdata(data, survey="epsi", time_start=time_start)
+    data2 <- pilrdata(data, survey="idas", time_start=time_start)
+    data <- list(data1,data2)
     nas <- c(data[[1]]$non_response,data[[2]]$non_response)
     if(any(nas)){
       out <- data.frame(risk = 'MISSING', predprob = NA, Time = NA)
