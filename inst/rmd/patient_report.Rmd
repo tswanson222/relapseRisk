@@ -6,6 +6,7 @@ params:
   set_title: "TITLE"
   set_date: "DATE"
   stoplights: NULL
+  time_start: NULL
 title: "`r params$set_title`"
 date: "`r params$set_date`"
 ---
@@ -17,8 +18,8 @@ participant <- params$participant
 risk <- predictRisk(participant, pilr = TRUE)
 risk <- risk[nrow(risk), 'risk']
 
-epsi <- pilrdata(file = participant, survey = 'epsi')
-idas <- pilrdata(file = participant, survey = 'idas')
+epsi <- pilrdata(file = participant, survey = 'epsi', time_start=time_start)
+idas <- pilrdata(file = participant, survey = 'idas', time_start=time_start)
 
 response_condition <- ifelse(epsi$non_response & idas$non_response, ifelse(epsi$tech_inter | idas$tech_inter,2,1),
                              ifelse(epsi$non_response | idas$non_response,3,4))
