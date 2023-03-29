@@ -98,7 +98,7 @@ if(length(idas)<=2){
 ```
 
 \newpage
-# questions
+# Module Questions
 
 
 ```{r table3, echo = FALSE}
