@@ -372,7 +372,10 @@ questionTable <- function(data, week, questions){
     for(i in 1:dim(sub)[1]){
       question_id <- sub$question_code[i]
       subsub <- subset(questions,code==question_id)
-      tab[k:(k+dim(subsub)[1]-1),1] <- paste0(" Q: ",subsub$text,"    ")
+      tab[k,1] <- paste0(" Q: ",subsub$text[1],"    ")
+      if(dim(subsub)[1]>1){
+              tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]),"    ")
+        }
       cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
       k <- k+dim(subsub)[1]
       subsub <- subset(sub,question_code==question_id)
@@ -385,8 +388,8 @@ questionTable <- function(data, week, questions){
     mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
                                         core = list(fg_params = list(hjust=0, x=0.01,
                                                            fontsize=8,col=cols),
-                                                   bg_params = list(fill=c(rep("grey90",
-                                                   length.out=k-1), "#6BAED6"),
+                                                   bg_params = list(fill=rep("grey95",
+                                                   length.out=k-1)),
                          alpha = rep(c(1,0.5), each=5))),
                               colhead = list(fg_params = list(fontsize=8, 
                                                               fontface="bold"))
