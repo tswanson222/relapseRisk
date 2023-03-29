@@ -103,12 +103,8 @@ if(length(idas)<=2){
 
 
 ```{r table3, echo = FALSE}
-if(is.null(questions)){
-  message('Patient did not respond to Module questions this week.')
-} 
-if(!is.null(questions)){
   questions
-}
+
 
 ```                    
                 
