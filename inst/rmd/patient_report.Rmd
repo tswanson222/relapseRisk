@@ -101,7 +101,7 @@ if(length(idas)<=2){
 # Module Questions
 
 
-```{r table3, echo = FALSE}
+```{r table3, echo = FALSE, message = FALSE, warning = FALSE,out.width = "750px"}
   questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions)
 
 
