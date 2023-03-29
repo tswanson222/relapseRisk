@@ -376,12 +376,12 @@ questionTable <- function(data, week, questions){
     }
     cols <- matrix(rep(c("dark blue","black"),dim(sub)[1]), nrow=2*dim(sub)[1], ncol=1)
     mytheme <- gridExtra::ttheme_default(core = list(fg_params = list(hjust=0, x=0.1, 
-                                                           fontsize=10,col=cols)),
-                              colhead = list(fg_params = list(fontsize=10, 
+                                                           fontsize=11,col=cols)),
+                              colhead = list(fg_params = list(fontsize=11, 
                                                               fontface="bold"))
     )
   #  tab <- sapply(lapply(tab[,1], strwrap, width=c(160)), paste, collapse="\n")
-  #  tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
+    tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
     out <- grid::grid.draw(g1)
     return(out)
