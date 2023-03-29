@@ -365,23 +365,28 @@ questionTable <- function(data, week, questions){
   sub <- subset(data,substr(question_code,1,2) %in% paste0("m",corres[[week]]))
 
   if(!is.null(sub)){
-    tab <- data.frame(array(dim=c(2*dim(sub)[1],1)))
+    tab <- data.frame(array(dim=c(100,1)))
+    cols <- rep(NA,100)
+    k <- 1
     names(tab) <- "Answers to questions"
     for(i in 1:dim(sub)[1]){
       question_id <- sub$question_code[i]
       subsub <- subset(questions,code==question_id)
-      tab[2*i-1,1] <- subsub$text[1]
+      tab[k:(k+dim(subsub)[1]-1),1] <- subsub$text
+      cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
+      k <- k+dim(subsub)[1]
       subsub <- subset(sub,question_code==question_id)
-      tab[2*i,1] <- subsub$response[1]
+      tab[k,1] <- subsub$response[1]
+      cols[k] <- "black"
+      k <- k+1
     }
-    cols <- matrix(rep(c("dark blue","black"),dim(sub)[1]), nrow=2*dim(sub)[1], ncol=1)
-    mytheme <- gridExtra::ttheme_default(core = list(fg_params = list(hjust=0, x=0.1, 
-                                                           fontsize=11,col=cols)),
-                              colhead = list(fg_params = list(fontsize=11, 
+    tab <- tab[1:(k-1),]
+    cols <- matrix(cols[1:(k-1)], ncol=1)
+    mytheme <- gridExtra::ttheme_default(core = list(fg_params = list(hjust=0, x=0.01, 
+                                                           fontsize=10,col=cols)),
+                              colhead = list(fg_params = list(fontsize=12, 
                                                               fontface="bold"))
     )
-  #  tab <- sapply(lapply(tab[,1], strwrap, width=c(160)), paste, collapse="\n")
-    tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
     out <- grid::grid.draw(g1)
     return(out)
