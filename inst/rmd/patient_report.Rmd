@@ -102,7 +102,7 @@ if(length(idas)<=2){
 
 
 ```{r table3, echo = FALSE}
-  questionTable(data = participant, week=epoch, questions=questions)
+  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions)
 
 
 ```                    
