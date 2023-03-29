@@ -7,6 +7,8 @@ params:
   set_date: "DATE"
   stoplights: NULL
   time_start: NULL
+  epoch: 1
+  questions: NULL
 title: "`r params$set_title`"
 date: "`r params$set_date`"
 ---
@@ -20,6 +22,8 @@ risk <- risk[nrow(risk), 'risk']
 
 epsi <- pilrdata(file = participant, survey = 'epsi', time_start=params$time_start)
 idas <- pilrdata(file = participant, survey = 'idas', time_start=params$time_start)
+
+questions <- questionTable(data = participant, week=epoch, questions=questions)
 
 response_condition <- ifelse(epsi$non_response & idas$non_response, ifelse(epsi$tech_inter | idas$tech_inter,2,1),
                              ifelse(epsi$non_response | idas$non_response,3,4))
@@ -93,3 +97,18 @@ if(length(idas)<=2){
   message('Patient did not complete the IDAS survey this week and there are no previous records.')
 }
 ```
+
+\newpage
+# questions
+
+
+```{r table3, echo = FALSE}
+if(is.null(questions)){
+  message('Patient did not respond to Module questions this week.')
+} 
+if(!is.null(questions)){
+  questions
+}
+
+```                    
+                
