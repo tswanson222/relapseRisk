@@ -323,7 +323,7 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',time_start = "2023-01-01"){
+createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',time_start = "2023-01-01",questions=questions){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
@@ -338,7 +338,8 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',
                                   set_date = date,
                                   stoplights = stoplights,
                                   time_start=as.Date(time_start),
-                                  epoch=epoch))
+                                  epoch=epoch,
+                                  questions=questions))
 }
 
 
@@ -382,8 +383,8 @@ questionTable <- function(data, week, questions){
     tab <- sapply(lapply(tab[,1], strwrap, width=c(160)), paste, collapse="\n")
     tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
-    grid::grid.draw(g1)
-#    return(out)
+    out <- grid::grid.draw(g1)
+    return(out)
   }
 }
 
