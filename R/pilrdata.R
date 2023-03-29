@@ -374,7 +374,7 @@ questionTable <- function(data, week, questions){
       subsub <- subset(questions,code==question_id)
       tab[k,1] <- paste0(" Q: ",subsub$text[1],"    ")
       if(dim(subsub)[1]>1){
-              tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]),"    ")
+              tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
         }
       cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
       k <- k+dim(subsub)[1]
