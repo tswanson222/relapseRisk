@@ -343,6 +343,49 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',
 
 
 
+questionTable <- function(data, week, questions){
+
+  corres <- list()
+  for(i in 1:3){
+    corres[[i]] <- c(2*i-1,2*i)
+  }
+  corres[[4]] <- c(7,8,9)
+  for(i in 5:6){
+    corres[[i]] <- c(2*i,2*i+1)
+  }
+  corres[[7]] <- c(18,24)
+  corres[[8]] <- c(19,20,21)
+  corres[[9]] <- c(25,26)
+  corres[[10]] <- c(28,29)
+  corres[[11]] <- 31
+  corres[[12]] <- c(32,33)
+  
+  sub <- subset(data,substr(question_code,1,2) %in% paste0("m",corres[[week]]))
+
+  if(!is.null(sub)){
+    tab <- data.frame(array(dim=c(2*dim(sub)[1],1)))
+    names(tab) <- "Answers to questions"
+    for(i in 1:dim(sub)[1]){
+      question_id <- sub$question_code[i]
+      subsub <- subset(questions,code==question_id)
+      tab[2*i-1,1] <- subsub$text[1]
+      subsub <- subset(sub,question_code==question_id)
+      tab[2*i,1] <- subsub$response[1]
+    }
+    cols <- matrix(rep(c("dark blue","black"),dim(sub)[1]), nrow=2*dim(sub)[1], ncol=1)
+    mytheme <- gridExtra::ttheme_default(core = list(fg_params = list(hjust=0, x=0.1, 
+                                                           fontsize=8,col=cols)),
+                              colhead = list(fg_params = list(fontsize=9, 
+                                                              fontface="bold"))
+    )
+    tab <- sapply(lapply(tab[,1], strwrap, width=c(160)), paste, collapse="\n")
+    tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
+    g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
+    grid::grid.draw(g1)
+#    return(out)
+  }
+}
+
 
 
 
