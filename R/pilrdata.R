@@ -337,7 +337,8 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',
                                   set_title = paste0('Patient ', id),
                                   set_date = date,
                                   stoplights = stoplights,
-                                  time_start=as.Date(time_start)))
+                                  time_start=as.Date(time_start),
+                                  epoch=epoch))
 }
 
 
