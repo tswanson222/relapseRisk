@@ -380,8 +380,8 @@ questionTable <- function(data, week, questions){
                               colhead = list(fg_params = list(fontsize=9, 
                                                               fontface="bold"))
     )
-    tab <- sapply(lapply(tab[,1], strwrap, width=c(160)), paste, collapse="\n")
-    tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
+  #  tab <- sapply(lapply(tab[,1], strwrap, width=c(160)), paste, collapse="\n")
+  #  tab <- sapply(lapply(tab, strwrap, width=c(80)), paste, collapse="\n")
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
     out <- grid::grid.draw(g1)
     return(out)
