@@ -372,21 +372,23 @@ questionTable <- function(data, week, questions){
     for(i in 1:dim(sub)[1]){
       question_id <- sub$question_code[i]
       subsub <- subset(questions,code==question_id)
-      tab[k:(k+dim(subsub)[1]-1),1] <- subsub$text
+      tab[k:(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text,"    ")
       cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
       k <- k+dim(subsub)[1]
       subsub <- subset(sub,question_code==question_id)
-      tab[k,1] <- subsub$response[1]
+      tab[k,1] <- paste0("    ",subsub$response[1],"    ")
       cols[k] <- "black"
       k <- k+1
     }
     tab <- tab[1:(k-1),]
     cols <- matrix(cols[1:(k-1)], ncol=1)
-    mytheme <- gridExtra::ttheme_default(core = list(fg_params = list(hjust=0, x=0.01, 
+    mytheme <- gridExtra::ttheme_default(base_size=14,padding = grid::unit(c(4, 4), "mm"),
+                                        core = list(fg_params = list(hjust=0, x=0.01,
                                                            fontsize=10,col=cols)),
                               colhead = list(fg_params = list(fontsize=12, 
                                                               fontface="bold"))
     )
+    g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
     out <- grid::grid.draw(g1)
     return(out)
