@@ -346,7 +346,7 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',
 
 
 questionTable <- function(data, week, questions){
-
+  
   corres <- list()
   for(i in 1:3){
     corres[[i]] <- c(2*i-1,2*i)
@@ -363,7 +363,7 @@ questionTable <- function(data, week, questions){
   corres[[12]] <- c(32,33)
   
   sub <- subset(data,substr(question_code,1,2) %in% paste0("m",corres[[week]]))
-
+  
   if(!is.null(sub)){
     tab <- data.frame(array(dim=c(100,1)))
     cols <- rep(NA,100)
@@ -374,8 +374,8 @@ questionTable <- function(data, week, questions){
       subsub <- subset(questions,code==question_id)
       tab[k,1] <- paste0(" Q: ",subsub$text[1],"    ")
       if(dim(subsub)[1]>1){
-              tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
-        }
+        tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
+      }
       cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
       k <- k+dim(subsub)[1]
       subsub <- subset(sub,question_code==question_id)
@@ -386,18 +386,17 @@ questionTable <- function(data, week, questions){
     tab <- tab[1:(k-1),]
     cols <- matrix(cols[1:(k-1)], ncol=1)
     mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
-                                        core = list(fg_params = list(hjust=0, x=0.01,
-                                                           fontsize=8,col=cols),
-                                                   bg_params = list(fill=rep("grey95",
-                                                   length.out=k-1)),
-                         alpha = rep(c(1,0.5), each=5))),
-                              colhead = list(fg_params = list(fontsize=8, 
-                                                              fontface="bold"))
+                                         core = list(fg_params = list(hjust=0, x=0.01,
+                                                                      fontsize=8,col=cols),
+                                                     bg_params = list(fill=rep("grey95",
+                                                                               length.out=k-1))),
+    colhead = list(fg_params = list(fontsize=8, 
+                                    fontface="bold"))
     )
-    g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
-    g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
-    out <- grid::grid.draw(g1)
-    return(out)
+g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
+g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
+out <- grid::grid.draw(g1)
+return(out)
   }
 }
 
