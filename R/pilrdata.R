@@ -384,8 +384,8 @@ questionTable <- function(data, week, questions){
     cols <- matrix(cols[1:(k-1)], ncol=1)
     mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
                                         core = list(fg_params = list(hjust=0, x=0.01,
-                                                           fontsize=12,col=cols)),
-                              colhead = list(fg_params = list(fontsize=12, 
+                                                           fontsize=8,col=cols)),
+                              colhead = list(fg_params = list(fontsize=8, 
                                                               fontface="bold"))
     )
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
