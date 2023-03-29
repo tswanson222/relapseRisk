@@ -389,7 +389,7 @@ questionTable <- function(data, week, questions){
                                                               fontface="bold"))
     )
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
-    g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
+    g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
     out <- grid::grid.draw(g1)
     return(out)
   }
