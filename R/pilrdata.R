@@ -379,9 +379,24 @@ questionTable <- function(data, week, questions){
       cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
       k <- k+dim(subsub)[1]
       subsub <- subset(sub,question_code==question_id)
-      tab[k,1] <- paste0(" A: ",subsub$response[1],"    ")
-      cols[k] <- "black"
-      k <- k+1
+      a <- subsub$response[1]
+      as <- list()
+      s <- 1
+      while(nchar(a)>125){
+         m <- 110
+         while(substr(a,m,m)!=" "){
+           m <- m+1
+         }
+         as[[s]] <- substr(a,1,m)
+         a <- substr(a,m+1,nchar(a))
+         s <- s+1
+      }
+      as[[s]] <- a
+      for(m in 1:s){
+        tab[k,1] <- ifelse(m==1,paste0("A: ",as[[m]]),as[[m]])
+        cols[k] <- "black"
+        k <- k+1
+       }
     }
     tab <- tab[1:(k-1),]
     cols <- matrix(cols[1:(k-1)], ncol=1)
