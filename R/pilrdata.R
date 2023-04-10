@@ -382,8 +382,8 @@ questionTable <- function(data, week, questions){
       a <- subsub$response[1]
       as <- list()
       s <- 1
-      while(nchar(a)>125){
-         m <- 110
+      while(nchar(a)>110){
+         m <- 95
          while(substr(a,m,m)!=" "){
            m <- m+1
          }
