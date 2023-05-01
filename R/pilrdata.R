@@ -410,18 +410,9 @@ questionTable <- function(data, week, questions){
     )
     table_length <- dim(tab)[1]
     L <- floor(table_length/18) + 1
-    for(l in 1:L){
-      if(l<L){
-        g1 <- gridExtra::tableGrob(tab[(18*l-17):(18*l),], theme = mytheme, rows=NULL)
+    g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
         g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
         out <- grid::grid.draw(g1)
-       }
-      else{
-        g1 <- gridExtra::tableGrob(tab[(18*l-17):(table_length),], theme = mytheme, rows=NULL)
-        g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
-        out <- grid::grid.draw(g1)
-       }
-      }
   }
 }
 
