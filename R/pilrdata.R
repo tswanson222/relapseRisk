@@ -364,7 +364,7 @@ questionTable <- function(data, week, questions){
   
   sub <- subset(data,substr(question_code,1,2) %in% paste0("m",corres[[week]]))
   
-  if(!is.null(sub)){
+  if(!is.null(sub) & dim(sub)[1]>0){
     tab <- data.frame(array(dim=c(100,1)))
     cols <- rep(NA,100)
     k <- 1
