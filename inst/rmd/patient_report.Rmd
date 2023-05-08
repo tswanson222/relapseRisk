@@ -9,6 +9,7 @@ params:
   time_start: NULL
   epoch: 1
   questions: NULL
+  participant_assignment: NULL
 title: "`r params$set_title`"
 date: "`r params$set_date`"
 ---
@@ -102,7 +103,8 @@ if(length(idas)<=2){
 
 
 ```{r table3, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=8}
-  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions)
+  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
+                participant_assignment = params$participant_assignment)
 
 
 ```                    
