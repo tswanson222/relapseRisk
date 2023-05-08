@@ -323,7 +323,8 @@ itemTable <- function(data, ...){
 #'
 #' @examples
 #' 1 + 1
-createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',time_start = "2023-01-01",questions=questions){
+createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',time_start = "2023-01-01",questions=questions,
+                participant_assignment="treat"){
   date <- Sys.Date()
   input <- system.file('rmd', 'patient_report.Rmd', package = 'relapseRisk')
   colors <- c('green', 'red', 'yellow')
@@ -339,15 +340,16 @@ createReport <- function(participant, therapist=0, epoch=0, id=0, output = './',
                                   stoplights = stoplights,
                                   time_start=as.Date(time_start),
                                   epoch=epoch,
-                                  questions=questions))
+                                  questions=questions,
+                                  participant_assignment=participant_assignment))
 }
 
 
 
 
-questionTable <- function(data, week, questions){
-  
-  corres <- list()
+questionTable <- function(data, week, questions, participant_assignment){
+  if(participant_assignment=="treat"){
+    corres <- list()
   for(i in 1:3){
     corres[[i]] <- c(2*i-1,2*i)
   }
@@ -414,6 +416,61 @@ questionTable <- function(data, week, questions){
         g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
         out <- grid::grid.draw(g1)
   }
+  }
+  
+  else {
+      sub <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
+      if(!is.null(sub) & dim(sub)[1]>0){
+          tab <- data.frame(array(dim=c(100,1)))
+          cols <- rep(NA,100)
+          k <- 1
+          names(tab) <- "Answers to questions"
+          for(i in 1:dim(sub)[1]){
+               question_id <- sub$question_code[i]
+               subsub <- subset(questions,code==question_id)
+               tab[k,1] <- paste0(" Q: ",subsub$text[1],"    ")
+               if(dim(subsub)[1]>1){
+                    tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
+               }
+               cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
+               k <- k+dim(subsub)[1]
+               subsub <- subset(sub,question_code==question_id)
+               a <- subsub$response[1]
+               as <- list()
+               s <- 1
+               while(nchar(a)>110){
+                   m <- 95
+                   while(substr(a,m,m)!=" "){
+                   m <- m+1
+                   }
+                   as[[s]] <- substr(a,1,m)
+                   a <- substr(a,m+1,nchar(a))
+                   s <- s+1
+               }
+               as[[s]] <- a
+               for(m in 1:s){
+                   tab[k,1] <- ifelse(m==1,paste0("A: ",as[[m]]),as[[m]])
+                   cols[k] <- "black"
+                   k <- k+1
+               }
+          }
+          tab <- tab[1:(k-1),]
+          cols <- matrix(cols[1:(k-1)], ncol=1)
+          mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
+                                         core = list(fg_params = list(hjust=0, x=0.01,
+                                                                      fontsize=10,col=cols),
+                                                     bg_params = list(fill=rep("grey95",
+                                                                               length.out=k-1))),
+                                         colhead = list(fg_params = list(fontsize=10, 
+                                                    fontface="bold"))
+                      )
+          table_length <- dim(tab)[1]
+          L <- floor(table_length/18) + 1
+          g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
+          g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
+          out <- grid::grid.draw(g1)
+      }
+   }
 }
 
 
