@@ -374,7 +374,7 @@ questionTable <- function(data, week, questions, participant_assignment){
     for(i in 1:dim(sub)[1]){
       question_id <- sub$question_code[i]
       subsub <- subset(questions,code==question_id)
-      tab[k,1] <- paste0(" Q: ",subsub$text[1],"    ")
+      tab[k,1] <- paste0("Q: ",subsub$text[1],"    ")
       if(dim(subsub)[1]>1){
         tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
       }
@@ -425,17 +425,18 @@ questionTable <- function(data, week, questions, participant_assignment){
           cols <- rep(NA,100)
           k <- 1
           names(tab) <- "Answers to questions"
+          entry_label <- 1
           for(i in 1:dim(sub)[1]){
                question_id <- sub$question_code[i]
                subsub <- subset(questions,code==question_id)
-               tab[k,1] <- paste0(" Q: ",subsub$text[1],"    ")
+               tab[k,1] <- paste0("Q: ",subsub$text[1],"    ")
                if(dim(subsub)[1]>1){
                     tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
                }
                cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
                k <- k+dim(subsub)[1]
                subsub <- subset(sub,question_code==question_id)
-               a <- subsub$response[1]
+               a <- subsub$response[entry_label]
                as <- list()
                s <- 1
                while(nchar(a)>110){
@@ -452,6 +453,9 @@ questionTable <- function(data, week, questions, participant_assignment){
                    tab[k,1] <- ifelse(m==1,paste0("A: ",as[[m]]),as[[m]])
                    cols[k] <- "black"
                    k <- k+1
+               }
+               if(question_id=="diary_4"){
+                    entry_label <- entry_label + 1
                }
           }
           tab <- tab[1:(k-1),]
