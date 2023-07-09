@@ -419,7 +419,9 @@ questionTable <- function(data, week, questions, participant_assignment){
   }
   
   else {
-      sub <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
+      sub1 <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
+      sub2 <- subset(data,substr(question_code,1,3)=="pm4" & survey_code==paste0("PACTmodule4_w",week))
+      sub <- rbind(sub1,sub2)
       if(!is.null(sub) & dim(sub)[1]>0){
           tab <- data.frame(array(dim=c(100,1)))
           cols <- rep(NA,100)
