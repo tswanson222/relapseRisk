@@ -101,21 +101,42 @@ if(length(idas)<=2){
 \newpage
 # Module Questions
 
-
-```{r table3, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=9}
-  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
+```{r table3, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=8}
+  questionTable2(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
                 participant_assignment = params$participant_assignment)
+
+
+``` 
+\newpage
+
+```{r table4, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=9}
+  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
+                participant_assignment = params$participant_assignment,1)
 
 
 ```   
 
 \newpage
 
-
-```{r table4, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=9}
-  questionTable2(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
-                participant_assignment = params$participant_assignment)
+```{r table5, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=9}
+  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
+                participant_assignment = params$participant_assignment,2)
 
 
 ```   
+
+\newpage
+
+```{r table6, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=9}
+  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
+                participant_assignment = params$participant_assignment,3)
+
+
+```   
+
+
+
+
+
+  
                 
