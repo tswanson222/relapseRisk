@@ -106,6 +106,8 @@ if(length(idas)<=2){
   questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
                 participant_assignment = params$participant_assignment)
 
+\newpage
+
   questionTable2(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
                 participant_assignment = params$participant_assignment)
 
