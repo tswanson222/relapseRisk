@@ -106,11 +106,16 @@ if(length(idas)<=2){
   questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
                 participant_assignment = params$participant_assignment)
 
+
+```   
+
 \newpage
 
+
+```{r table4, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=8}
   questionTable2(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
                 participant_assignment = params$participant_assignment)
 
 
-```                    
+```   
                 
