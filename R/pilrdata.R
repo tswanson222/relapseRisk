@@ -429,9 +429,6 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
           entry_label <- 1
           for(i in 1:dim(sub)[1]){
                question_id <- sub$question_code[i]
-               if(substr(question_id,1,3)=="pm4"){
-                    entry_label <- 1
-               }
                subsub <- subset(questions,code==question_id)
                tab[k,1] <- paste0("Q: ",subsub$text[1],"    ")
                if(dim(subsub)[1]>1){
@@ -499,9 +496,6 @@ questionTable2 <- function(data, week, questions, participant_assignment){
           entry_label <- 1
           for(i in 1:dim(sub)[1]){
                question_id <- sub$question_code[i]
-               if(substr(question_id,1,3)=="pm4"){
-                    entry_label <- 1
-               }
                subsub <- subset(questions,code==question_id)
                tab[k,1] <- paste0("Q: ",subsub$text[1],"    ")
                if(dim(subsub)[1]>1){
@@ -527,9 +521,6 @@ questionTable2 <- function(data, week, questions, participant_assignment){
                    tab[k,1] <- ifelse(m==1,paste0("A: ",as[[m]]),as[[m]])
                    cols[k] <- "black"
                    k <- k+1
-               }
-               if(question_id=="diary_4"){
-                    entry_label <- entry_label + 1
                }
           }
           tab <- tab[1:(k-1),]
