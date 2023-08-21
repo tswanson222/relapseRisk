@@ -404,10 +404,10 @@ questionTable <- function(data, week, questions, participant_assignment){
     cols <- matrix(cols[1:(k-1)], ncol=1)
     mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
                                          core = list(fg_params = list(hjust=0, x=0.01,
-                                                                      fontsize=10,col=cols),
+                                                                      fontsize=9,col=cols),
                                                      bg_params = list(fill=rep("grey95",
                                                                                length.out=k-1))),
-    colhead = list(fg_params = list(fontsize=10, 
+    colhead = list(fg_params = list(fontsize=9, 
                                     fontface="bold"))
     )
     table_length <- dim(tab)[1]
@@ -467,10 +467,10 @@ questionTable <- function(data, week, questions, participant_assignment){
           cols <- matrix(cols[1:(k-1)], ncol=1)
           mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
                                          core = list(fg_params = list(hjust=0, x=0.01,
-                                                                      fontsize=10,col=cols),
+                                                                      fontsize=9,col=cols),
                                                      bg_params = list(fill=rep("grey95",
                                                                                length.out=k-1))),
-                                         colhead = list(fg_params = list(fontsize=10, 
+                                         colhead = list(fg_params = list(fontsize=9, 
                                                     fontface="bold"))
                       )
           table_length <- dim(tab)[1]
