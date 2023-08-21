@@ -442,8 +442,8 @@ questionTable <- function(data, week, questions, participant_assignment){
                a <- subsub$response[entry_label]
                as <- list()
                s <- 1
-               while(nchar(a)>110){
-                   m <- 95
+               while(nchar(a)>130){
+                   m <- 105
                    while(substr(a,m,m)!=" "){
                    m <- m+1
                    }
@@ -487,6 +487,9 @@ questionTable2 <- function(data, week, questions, participant_assignment){
   
   else {
       sub <- subset(data,substr(question_code,1,3)=="pm4" & survey_code==paste0("PACTmodule4_w",week))
+      if(dim(sub)[1]>12){
+        sub <- sub[1:12,]
+      }
       if(!is.null(sub) & dim(sub)[1]>0){
           tab <- data.frame(array(dim=c(100,1)))
           cols <- rep(NA,100)
@@ -509,8 +512,8 @@ questionTable2 <- function(data, week, questions, participant_assignment){
                a <- subsub$response[entry_label]
                as <- list()
                s <- 1
-               while(nchar(a)>110){
-                   m <- 95
+               while(nchar(a)>130){
+                   m <- 105
                    while(substr(a,m,m)!=" "){
                    m <- m+1
                    }
