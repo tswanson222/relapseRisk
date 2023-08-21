@@ -420,7 +420,8 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
   
   else {
       sub <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
-      sub <- sub[(8*table_number-7):(8*table_number),]
+      if(dim(sub)[1]>=8*table_number-7){
+      sub <- sub[(8*table_number-7):(min(8*table_number,max(dim(sub)[1]),]
       if(!is.null(sub) & dim(sub)[1]>0){
           tab <- data.frame(array(dim=c(100,1)))
           cols <- rep(NA,100)
@@ -476,6 +477,7 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
           out <- grid::grid.draw(g1)
       }
    }
+    }
 }
 
 
