@@ -419,9 +419,7 @@ questionTable <- function(data, week, questions, participant_assignment){
   }
   
   else {
-      sub1 <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
-      sub2 <- subset(data,substr(question_code,1,3)=="pm4" & survey_code==paste0("PACTmodule4_w",week))
-      sub <- rbind(sub1,sub2)
+      sub <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
       if(!is.null(sub) & dim(sub)[1]>0){
           tab <- data.frame(array(dim=c(100,1)))
           cols <- rep(NA,100)
@@ -482,6 +480,72 @@ questionTable <- function(data, week, questions, participant_assignment){
    }
 }
 
+
+questionTable2 <- function(data, week, questions, participant_assignment){
+  if(participant_assignment=="treat"){
+  }
+  
+  else {
+      sub <- subset(data,substr(question_code,1,3)=="pm4" & survey_code==paste0("PACTmodule4_w",week))
+      if(!is.null(sub) & dim(sub)[1]>0){
+          tab <- data.frame(array(dim=c(100,1)))
+          cols <- rep(NA,100)
+          k <- 1
+          names(tab) <- "Answers to questions"
+          entry_label <- 1
+          for(i in 1:dim(sub)[1]){
+               question_id <- sub$question_code[i]
+               if(substr(question_id,1,3)=="pm4"){
+                    entry_label <- 1
+               }
+               subsub <- subset(questions,code==question_id)
+               tab[k,1] <- paste0("Q: ",subsub$text[1],"    ")
+               if(dim(subsub)[1]>1){
+                    tab[(k+1):(k+dim(subsub)[1]-1),1] <- paste0("    ",subsub$text[2:dim(subsub)[1]],"    ")
+               }
+               cols[k:(k+dim(subsub)[1]-1)] <- "dark blue"
+               k <- k+dim(subsub)[1]
+               subsub <- subset(sub,question_code==question_id)
+               a <- subsub$response[entry_label]
+               as <- list()
+               s <- 1
+               while(nchar(a)>110){
+                   m <- 95
+                   while(substr(a,m,m)!=" "){
+                   m <- m+1
+                   }
+                   as[[s]] <- substr(a,1,m)
+                   a <- substr(a,m+1,nchar(a))
+                   s <- s+1
+               }
+               as[[s]] <- a
+               for(m in 1:s){
+                   tab[k,1] <- ifelse(m==1,paste0("A: ",as[[m]]),as[[m]])
+                   cols[k] <- "black"
+                   k <- k+1
+               }
+               if(question_id=="diary_4"){
+                    entry_label <- entry_label + 1
+               }
+          }
+          tab <- tab[1:(k-1),]
+          cols <- matrix(cols[1:(k-1)], ncol=1)
+          mytheme <- gridExtra::ttheme_default(base_size=20,padding = grid::unit(c(4, 4), "mm"),
+                                         core = list(fg_params = list(hjust=0, x=0.01,
+                                                                      fontsize=9,col=cols),
+                                                     bg_params = list(fill=rep("grey95",
+                                                                               length.out=k-1))),
+                                         colhead = list(fg_params = list(fontsize=9, 
+                                                    fontface="bold"))
+                      )
+          table_length <- dim(tab)[1]
+          L <- floor(table_length/18) + 1
+          g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
+          g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
+          out <- grid::grid.draw(g1)
+      }
+   }
+}
 
 
 
