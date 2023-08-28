@@ -365,7 +365,9 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
   corres[[12]] <- c(32,33)
   
   sub <- subset(data,substr(question_code,1,2) %in% paste0("m",corres[[week]]))
-  
+
+  if(dim(sub)[1]>=10*table_number-9){
+      sub <- sub[(10*table_number-9):min(10*table_number,dim(sub)[1]),]
   if(!is.null(sub) & dim(sub)[1]>0){
     tab <- data.frame(array(dim=c(100,1)))
     cols <- rep(NA,100)
@@ -415,6 +417,7 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
     g1 <- gridExtra::tableGrob(tab, theme = mytheme, rows=NULL)
         g1$widths <- grid::unit(rep(1/ncol(g1), ncol(g1)), "npc")
         out <- grid::grid.draw(g1)
+  }
   }
   }
   
