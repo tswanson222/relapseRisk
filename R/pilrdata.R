@@ -297,10 +297,6 @@ itemTable <- function(data, ...){
   colors <- c('#006D2C', '#41AB5D', '#FDAE61', '#E31A1C', '#800026')
   data <- data[order(data$Responses), ]
   rownames(data) <- 1:nrow(data)
-  %data <- within(data, {
-  %  Responses <- kableExtra::cell_spec(Responses, color = 'white', bold = TRUE,
-  %                                     background = factor(Responses, resopts, colors))
-  %})
   out <- kableExtra::kable_styling(kableExtra::kable(data, escape = FALSE),
                                    bootstrap_options = c('striped', 'hover', 'responsive'))
   return(out)
