@@ -423,6 +423,26 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
   
   else {
       sub <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
+      seq_identification <- as.numeric(gsub("\\D", "", sub$question_code))
+seq_remove <- rep(0,length(seq_identification))
+
+for(k in 1:length(seq_remove)){
+  if(seq_identification[k]==1){
+    seq_remove[k] <- ifelse(seq_identification[k+1]==2 & seq_identification[k+2]==3 & seq_identification[k+3]==4,
+                         0,1)
+    if(seq_remove[k]==1){
+      k1 <- k+1
+      while(seq_identification[k1]!=1 & k1<=length(seq_remove)){
+        k1 <- k1+1
+      }
+      for(ks in k:(k1-1)){
+        seq_remove[ks] <- 1
+      }      
+    }
+  }
+}
+
+sub <- subset(sub,seq_remove==0)
       if(dim(sub)[1]>=8*table_number-7){
       sub <- sub[(8*table_number-7):min(8*table_number,dim(sub)[1]),]
       if(!is.null(sub) & dim(sub)[1]>0){
