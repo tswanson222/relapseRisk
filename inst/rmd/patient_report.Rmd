@@ -122,20 +122,6 @@ if(length(idas)<=2){
 
 ``` 
 
-```{r table7, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=8}
-  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
-                participant_assignment = params$participant_assignment,table_number = 4)
-
-
-``` 
-
-```{r table8, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=8}
-  questionTable(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
-                participant_assignment = params$participant_assignment,table_number = 5)
-
-
-``` 
-
 ```{r table3, echo = FALSE, message = FALSE, warning = FALSE,out.width = "950px",fig.height=8}
   questionTable2(data = params$participant, week=as.numeric(params$epoch), questions=params$questions,
                 participant_assignment = params$participant_assignment)
