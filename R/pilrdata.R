@@ -170,7 +170,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
         ses <- c(ses_new[, 1], ses_new[, 2], ses_new[, 3])
         theta_dates <- theta_dates_new
         output <- data.frame(Estimate = thetas, SE = ses, Thetas = factor(labs),
-                             Time = time, Date = rep(theta_dates, each = 3))
+                             Time = time, Date = rep(theta_dates, 3))
       
       if(survey == 'epsi'){
         levels(output$Thetas) <- c('Bulimia', 'Exercise-Focused Behaviors', 'Restrictive Eating')
