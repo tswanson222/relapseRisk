@@ -71,7 +71,7 @@ pilrdata <- function(file = NULL, survey = c('epsi', 'idas'), day = NULL,
       ### Get Thetas
       thetas <- x2[x2$question_code == 'thetas', 'response_values']
       theta_dates <- x2[x2$question_code == 'thetas', 'date']
-      print(theta_dates)
+    
       theta_surveys <- x2[x2$question_code == 'thetas', 'survey_code']
       temp <- vector('list', length(thetas))
       for(i in 1:length(temp)){
