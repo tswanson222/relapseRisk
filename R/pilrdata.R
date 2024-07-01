@@ -422,6 +422,7 @@ questionTable <- function(data, week, questions, participant_assignment,table_nu
   else {
       sub <- subset(data,substr(question_code,1,5)=="diary" & survey_code==paste0("diary_w",week))
       seq_identification <- as.numeric(gsub("\\D", "", sub$question_code))
+      if(length(seq_identification)==0){return(NA)}
 seq_remove <- rep(0,length(seq_identification))
 
 for(k in 1:length(seq_remove)){
